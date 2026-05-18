@@ -21,7 +21,7 @@ export default function WhyUs() {
           {REASONS.map((r, i) => (
             <div
               key={r.title}
-              className="why-card glass reveal"
+              className="why-card glass glass-hover glow-border reveal"
               style={{ transitionDelay: `${i * 60}ms` }}
             >
               <div className="why-icon">
@@ -33,7 +33,7 @@ export default function WhyUs() {
           ))}
         </div>
 
-        <div className="stats glass">
+        <div className="stats glass glow-border">
           {STATS.map((s) => (
             <Stat key={s.label} value={s.value} suffix={s.suffix} label={s.label} />
           ))}

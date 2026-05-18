@@ -25,7 +25,7 @@ export default function ContactPageClient() {
           {/* SIDE */}
           <aside className="contact-side">
             <a
-              className="glass contact-card glass-hover"
+              className="glass contact-card glass-hover glow-border"
               href={waLink}
               target="_blank"
               rel="noopener noreferrer"
@@ -50,7 +50,7 @@ export default function ContactPageClient() {
               </span>
             </a>
 
-            <div className="glass contact-card">
+            <div className="glass contact-card glass-hover glow-border">
               <div className="ico">
                 <Icon name="chat" size={18} />
               </div>
@@ -63,15 +63,18 @@ export default function ContactPageClient() {
               </span>
             </div>
 
-            <div className="glass contact-card">
+            <div className="glass contact-card glass-hover glow-border">
+              <div className="ico">
+                <Icon name="cube" size={18} />
+              </div>
               <span className="label">Studio</span>
-              <span style={{ fontSize: "15px" }}>Karachi, Pakistan</span>
+              <span style={{ fontSize: "15px", fontWeight: "500" }}>Karachi, Pakistan</span>
               <span style={{ fontSize: "13px", color: "var(--fg-muted)" }}>
                 Mon–Fri · 10:00–19:00 PKT
               </span>
             </div>
 
-            <div className="glass contact-card">
+            <div className="glass contact-card glass-hover glow-border">
               <span className="label">Follow us</span>
               <div className="social-grid" style={{ marginTop: "4px" }}>
                 <a className="social-link" href="#" target="_blank" rel="noopener noreferrer">

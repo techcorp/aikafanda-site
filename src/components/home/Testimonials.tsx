@@ -22,7 +22,7 @@ export default function Testimonials() {
           <h2>What partners say.</h2>
         </div>
 
-        <div className="testimonial glass">
+        <div className="testimonial glass glow-border">
           <div className="t-stars">
             {[0, 1, 2, 3, 4].map((s) => (
               <Icon key={s} name="star" size={16} />

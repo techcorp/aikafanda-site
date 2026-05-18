@@ -27,7 +27,7 @@ export default function CalendarSlots({ onSelectSlot }: CalendarSlotsProps) {
   };
 
   return (
-    <div className="glass calendar-mock">
+    <div className="glass calendar-mock glow-border">
       <div className="cal-head">
         <h4>Book a 15-min slot</h4>
         <span>Thu · 23 May</span>

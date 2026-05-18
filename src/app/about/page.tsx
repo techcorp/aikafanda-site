@@ -64,21 +64,21 @@ export default function AboutPage() {
             </h2>
           </div>
           <div className="values-grid">
-            <div className="glass value-card">
+            <div className="glass glass-hover glow-border value-card">
               <span className="value-num">01</span>
               <h3>Ship beats perfect.</h3>
               <p>
                 An agent in production beats a perfect roadmap. We optimise for the shortest path from &quot;interesting idea&quot; to &quot;running on real data&quot; — then iterate from there.
               </p>
             </div>
-            <div className="glass value-card">
+            <div className="glass glass-hover glow-border value-card">
               <span className="value-num">02</span>
               <h3>Boring tech, sharp use.</h3>
               <p>
                 We pick reliable, well-understood stacks (n8n, Next.js, Postgres) and apply AI surgically — not as a wrapper around everything. Less novelty, more leverage.
               </p>
             </div>
-            <div className="glass value-card">
+            <div className="glass glass-hover glow-border value-card">
               <span className="value-num">03</span>
               <h3>Own your code.</h3>
               <p>
@@ -152,7 +152,7 @@ export default function AboutPage() {
           </div>
           <div className="team-grid">
             {TEAM_MEMBERS.map((m) => (
-              <div key={m.name} className="glass team-card glass-hover">
+              <div key={m.name} className="glass team-card glass-hover glow-border">
                 <div className="team-avatar" style={{ background: m.accent }}>
                   {m.initials}
                 </div>

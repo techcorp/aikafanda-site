@@ -18,7 +18,7 @@ export default function MobileApps() {
           {APPS.map((a, i) => (
             <div
               key={a.id}
-              className="app-card glass glass-hover reveal"
+              className="app-card glass glass-hover glow-border reveal"
               style={{ transitionDelay: `${i * 80}ms` }}
             >
               <Phone screen={a.screen} accent={a.accent} />

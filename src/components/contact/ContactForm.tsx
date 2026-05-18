@@ -140,7 +140,7 @@ export default function ContactForm({ selectedSlot }: ContactFormProps) {
   };
 
   return (
-    <form className="glass contact-form" id="contact-form" onSubmit={handleSubmit} noValidate>
+    <form className="glass contact-form glow-border" id="contact-form" onSubmit={handleSubmit} noValidate>
       {/* Honeypot Spam Prevention (Hidden) */}
       <div style={{ display: "none" }}>
         <label htmlFor="f-honeypot">Leave this blank</label>
