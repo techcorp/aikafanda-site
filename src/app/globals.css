@@ -657,42 +657,64 @@ p { margin: 0; color: var(--fg-muted); text-wrap: pretty; }
   position: absolute;
   inset: 0;
 }
-.float-card {
+.float-card-wrapper {
   position: absolute;
-  padding: 18px;
-  width: min(85%, 360px);
-  animation: float 8s ease-in-out infinite;
-  box-shadow: var(--shadow-card);
+  transition: transform 0.3s ease;
 }
-.float-card.f1 {
+.float-card-wrapper.f1 {
   top: 6%; right: 0;
-  animation-delay: -1s;
+  width: min(85%, 360px);
   z-index: 3;
 }
-.float-card.f2 {
+.float-card-wrapper.f2 {
   top: 40%; left: 0;
   width: min(78%, 320px);
-  animation-delay: -3s;
   z-index: 2;
 }
-.float-card.f3 {
+.float-card-wrapper.f3 {
   bottom: 4%; right: 8%;
   width: min(60%, 240px);
-  animation-delay: -5s;
   z-index: 4;
 }
 
-[data-anim="off"] .float-card { animation: none; }
+.float-card {
+  position: relative;
+  width: 100%;
+  padding: 18px;
+  animation: floatSoft 6s ease-in-out infinite;
+  box-shadow: var(--shadow-card);
+}
 
-@keyframes float {
+.float-card-wrapper.f1 .float-card { animation-delay: -1s; animation-duration: 5s; }
+.float-card-wrapper.f2 .float-card { animation-delay: -3s; animation-duration: 6s; }
+.float-card-wrapper.f3 .float-card { animation-delay: -5s; animation-duration: 5.5s; }
+
+[data-anim="off"] .float-card { animation: none !important; }
+
+@keyframes floatSoft {
   0%, 100% { transform: translateY(0); }
-  50% { transform: translateY(-12px); }
+  50% { transform: translateY(-8px); }
 }
 
 .fc-head { display: flex; align-items: center; gap: 10px; margin-bottom: 12px; }
-.fc-dot { width: 8px; height: 8px; border-radius: 50%; box-shadow: 0 0 8px currentColor; }
+.fc-dot {
+  width: 8px; height: 8px; border-radius: 50%; box-shadow: 0 0 8px currentColor;
+  animation: dotPulse 2s infinite ease-in-out;
+}
+@keyframes dotPulse {
+  0%, 100% { transform: scale(1); opacity: 0.8; box-shadow: 0 0 8px currentColor; }
+  50% { transform: scale(1.3); opacity: 1; box-shadow: 0 0 16px currentColor; }
+}
+
 .fc-title { font-family: var(--font-mono); font-size: 13px; color: var(--fg); font-weight: 600; }
-.fc-status { margin-left: auto; font-family: var(--font-mono); font-size: 11px; color: var(--ok); padding: 2px 8px; background: rgba(52,211,153,0.15); border-radius: 100px; font-weight: 600; }
+.fc-status {
+  margin-left: auto; font-family: var(--font-mono); font-size: 11px; color: var(--ok); padding: 2px 8px; background: rgba(52,211,153,0.15); border-radius: 100px; font-weight: 600;
+  animation: statusPulse 3s infinite ease-in-out;
+}
+@keyframes statusPulse {
+  0%, 100% { opacity: 0.95; }
+  50% { opacity: 0.65; }
+}
 .fc-body { display: flex; flex-direction: column; gap: 6px; font-family: var(--font-mono); font-size: 13px; color: var(--fg); }
 .fc-line { display: flex; gap: 10px; padding: 4px 0; border-bottom: 1px dashed rgba(255,255,255,0.07); }
 .fc-line:last-child { border-bottom: 0; }
@@ -761,15 +783,15 @@ p { margin: 0; color: var(--fg-muted); text-wrap: pretty; }
     max-width: 420px;
     margin: 0 auto;
   }
-  .float-card.f1 {
+  .float-card-wrapper.f1 {
     top: 10px; left: 0; right: auto;
     width: 90%;
   }
-  .float-card.f2 {
+  .float-card-wrapper.f2 {
     top: 175px; right: 0; left: auto;
     width: 88%;
   }
-  .float-card.f3 {
+  .float-card-wrapper.f3 {
     top: 340px; left: 10%; right: auto;
     width: 72%;
   }
@@ -777,49 +799,54 @@ p { margin: 0; color: var(--fg-muted); text-wrap: pretty; }
 @media (max-width: 640px) {
   .hero-visual {
     aspect-ratio: auto;
-    min-height: auto;
+    min-height: 440px;
     height: auto;
     width: 100%;
-    max-width: 100%;
+    max-width: 360px;
     margin: 0 auto;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    gap: 20px;
+    position: relative;
+    padding-bottom: 24px;
   }
   .float-stack {
-    position: relative !important;
-    inset: auto !important;
+    position: absolute !important;
+    inset: 0 !important;
     width: 100% !important;
-    height: auto !important;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    gap: 20px;
+    height: 100% !important;
     transform: none !important;
   }
-  .float-card {
-    position: relative !important;
-    top: auto !important;
-    left: auto !important;
-    right: auto !important;
-    bottom: auto !important;
-    width: 100% !important;
-    max-width: 340px !important;
-    margin: 0 auto !important;
-    transform: none !important;
-    animation: none !important;
+  .float-card-wrapper {
+    position: absolute !important;
+    transition: transform 0.3s ease;
   }
-  .float-card.f1,
-  .float-card.f2,
-  .float-card.f3 {
-    width: 100% !important;
-    max-width: 340px !important;
-    position: relative !important;
-    top: auto !important;
-    left: auto !important;
+  .float-card-wrapper.f1 {
+    top: 0 !important;
+    left: 50% !important;
     right: auto !important;
     bottom: auto !important;
+    width: 92% !important;
+    max-width: 290px !important;
+    transform: translateX(-50%) !important;
+    z-index: 30 !important;
+  }
+  .float-card-wrapper.f2 {
+    top: 155px !important;
+    left: 50% !important;
+    right: auto !important;
+    bottom: auto !important;
+    width: 88% !important;
+    max-width: 280px !important;
+    transform: translateX(-46%) !important;
+    z-index: 20 !important;
+  }
+  .float-card-wrapper.f3 {
+    top: 295px !important;
+    left: 50% !important;
+    right: auto !important;
+    bottom: auto !important;
+    width: 60% !important;
+    max-width: 190px !important;
+    transform: translateX(-76%) !important;
+    z-index: 40 !important;
   }
   .float-orbit {
     display: none !important;
