@@ -70,6 +70,17 @@ export default function Navbar() {
               </li>
             );
           })}
+          <li className="mobile-cta-item">
+            <a
+              className="btn btn-primary"
+              href={waLink}
+              target="_blank"
+              rel="noopener noreferrer"
+              style={{ width: "100%", justifyContent: "center", marginTop: "8px" }}
+            >
+              <Icon name="wa" size={16} /> Talk on WhatsApp
+            </a>
+          </li>
         </ul>
         <a
           className="btn btn-primary nav-cta"
