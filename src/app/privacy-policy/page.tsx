@@ -22,7 +22,7 @@ export default function PrivacyPolicyPage() {
 
       <section style={{ paddingTop: "24px", paddingBottom: "80px" }}>
         <div className="container">
-          <div className="glass glow-border" style={{ padding: "40px", borderRadius: "var(--radius-lg)", color: "var(--fg)", lineHeight: "1.7" }}>
+          <div className="glass glow-border legal-card">
             <h2 style={{ fontSize: "22px", marginBottom: "16px", color: "var(--accent)" }}>1. Information We Collect</h2>
             <p style={{ marginBottom: "24px" }}>
               We collect information that you voluntarily provide when you submit a contact form on our website or contact us via email, WhatsApp, or other communication channels. This information may include your name, email address, phone number, and any details regarding your project that you share.

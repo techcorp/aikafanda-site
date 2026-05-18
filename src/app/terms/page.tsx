@@ -22,7 +22,7 @@ export default function TermsPage() {
 
       <section style={{ paddingTop: "24px", paddingBottom: "80px" }}>
         <div className="container">
-          <div className="glass glow-border" style={{ padding: "40px", borderRadius: "var(--radius-lg)", color: "var(--fg)", lineHeight: "1.7" }}>
+          <div className="glass glow-border legal-card">
             <h2 style={{ fontSize: "22px", marginBottom: "16px", color: "var(--accent)" }}>1. Services Scope</h2>
             <p style={{ marginBottom: "24px" }}>
               Ai Ka Fanda provides custom AI agent development, n8n workflow automation implementations, vibe coding websites, and SaaS product engineering. The specific scope, timeline, deliverables, and fees for each engagement will be detailed in an independent project agreement.
