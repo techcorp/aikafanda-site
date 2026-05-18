@@ -651,7 +651,8 @@ p { margin: 0; color: var(--fg-muted); text-wrap: pretty; }
 .hero-visual {
   position: relative;
   aspect-ratio: 1 / 1;
-  min-height: 460px;
+  min-height: 520px;
+  overflow: visible;
 }
 .float-stack {
   position: absolute;
@@ -662,17 +663,17 @@ p { margin: 0; color: var(--fg-muted); text-wrap: pretty; }
   transition: transform 0.3s ease;
 }
 .float-card-wrapper.f1 {
-  top: 6%; right: 0;
+  top: 2%; right: 0;
   width: min(85%, 360px);
   z-index: 30;
 }
 .float-card-wrapper.f2 {
-  top: 40%; left: 0;
+  top: 36%; left: 0;
   width: min(78%, 320px);
   z-index: 20;
 }
 .float-card-wrapper.f3 {
-  bottom: 2%; left: 4%;
+  bottom: 2%; right: 6%; left: auto;
   width: min(60%, 240px);
   z-index: 40;
 }
@@ -802,14 +803,14 @@ p { margin: 0; color: var(--fg-muted); text-wrap: pretty; }
 @media (max-width: 640px) {
   .hero-visual {
     aspect-ratio: auto;
-    min-height: 480px;
+    min-height: 520px;
     height: auto;
     width: 100%;
     max-width: 360px;
     margin: 0 auto;
     position: relative;
     overflow: visible !important;
-    padding-bottom: 24px;
+    padding-bottom: 32px;
   }
   .float-stack {
     position: absolute !important;
@@ -843,7 +844,7 @@ p { margin: 0; color: var(--fg-muted); text-wrap: pretty; }
     z-index: 20 !important;
   }
   .float-card-wrapper.f3 {
-    top: 295px !important;
+    top: 335px !important;
     left: 50% !important;
     right: auto !important;
     bottom: auto !important;
