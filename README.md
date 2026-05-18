@@ -34,3 +34,20 @@ You can check out [the Next.js GitHub repository](https://github.com/vercel/next
 The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
 
 Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+
+## 📧 Email Integration Setup (Resend)
+
+The contact form is connected to **Resend** for reliable and secure email delivery. To enable email notifications for new leads:
+
+1. Create a free account at [Resend](https://resend.com/).
+2. Copy the `.env.example` file to `.env.local`:
+   ```bash
+   cp .env.example .env.local
+   ```
+3. Update the credentials in `.env.local`:
+   * `RESEND_API_KEY`: Your Resend API key (starts with `re_`).
+   * `RESEND_FROM_EMAIL`: A verified domain email address inside your Resend dashboard (defaults to `onboarding@resend.dev` for testing).
+   * `CONTACT_RECEIVER_EMAIL`: The recipient address where form notifications are sent (e.g. `technicalcorp700@gmail.com`).
+
+Note: If no API key is specified, form submissions will run in sandbox/simulation mode where leads are safely outputted to the server console.
+
