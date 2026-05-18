@@ -664,17 +664,17 @@ p { margin: 0; color: var(--fg-muted); text-wrap: pretty; }
 .float-card-wrapper.f1 {
   top: 6%; right: 0;
   width: min(85%, 360px);
-  z-index: 3;
+  z-index: 30;
 }
 .float-card-wrapper.f2 {
   top: 40%; left: 0;
   width: min(78%, 320px);
-  z-index: 4;
+  z-index: 20;
 }
 .float-card-wrapper.f3 {
   bottom: 2%; left: 4%;
   width: min(60%, 240px);
-  z-index: 2;
+  z-index: 40;
 }
 
 .float-card {
@@ -786,29 +786,30 @@ p { margin: 0; color: var(--fg-muted); text-wrap: pretty; }
   .float-card-wrapper.f1 {
     top: 10px; left: 0; right: auto;
     width: 90%;
-    z-index: 3;
+    z-index: 30;
   }
   .float-card-wrapper.f2 {
     top: 175px; right: 0; left: auto;
     width: 88%;
-    z-index: 4;
+    z-index: 20;
   }
   .float-card-wrapper.f3 {
     top: 340px; left: 10%; right: auto;
     width: 72%;
-    z-index: 2;
+    z-index: 40;
   }
 }
 @media (max-width: 640px) {
   .hero-visual {
     aspect-ratio: auto;
-    min-height: 420px;
+    min-height: 480px;
     height: auto;
     width: 100%;
     max-width: 360px;
     margin: 0 auto;
     position: relative;
-    padding-bottom: 16px;
+    overflow: visible !important;
+    padding-bottom: 24px;
   }
   .float-stack {
     position: absolute !important;
@@ -829,27 +830,27 @@ p { margin: 0; color: var(--fg-muted); text-wrap: pretty; }
     width: 92% !important;
     max-width: 290px !important;
     transform: translateX(-50%) !important;
-    z-index: 3 !important;
+    z-index: 30 !important;
   }
   .float-card-wrapper.f2 {
-    top: 145px !important;
+    top: 155px !important;
     left: 50% !important;
     right: auto !important;
     bottom: auto !important;
     width: 88% !important;
     max-width: 280px !important;
-    transform: translateX(-44%) !important;
-    z-index: 4 !important;
+    transform: translateX(-46%) !important;
+    z-index: 20 !important;
   }
   .float-card-wrapper.f3 {
-    top: 275px !important;
+    top: 295px !important;
     left: 50% !important;
     right: auto !important;
     bottom: auto !important;
-    width: 58% !important;
-    max-width: 185px !important;
+    width: 60% !important;
+    max-width: 190px !important;
     transform: translateX(-78%) !important;
-    z-index: 2 !important;
+    z-index: 40 !important;
   }
   .float-orbit {
     display: none !important;
