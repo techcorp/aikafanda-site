@@ -6,12 +6,14 @@ interface MarkdownEditorProps {
   value: string;
   onChange: (val: string) => void;
   placeholder?: string;
+  onImageUpload?: (file: File) => Promise<string>;
 }
 
 // Simple, performant client-side Markdown parser for preview rendering
 export function parseMarkdownToHtml(markdown: string): string {
   if (!markdown) return "";
-  let html = markdown;
+  // Normalize Windows CRLF and Mac CR newlines to standard LF to ensure regex block splitting works
+  let html = markdown.replace(/\r\n/g, '\n').replace(/\r/g, '\n');
 
   // Escape HTML entities to prevent raw injection
   html = html
@@ -36,17 +38,12 @@ export function parseMarkdownToHtml(markdown: string): string {
   html = html.replace(/^# (.*$)/gim, "<h1>$1</h1>");
 
   // Bullet Lists
-  html = html.replace(/^\*\s+(.+)$/gm, "<li>$1</li>");
-  html = html.replace(/^\-\s+(.+)$/gm, "<li>$1</li>");
-  html = html.replace(/(<li>[\s\S]*<\/li>)/g, "<ul>$1</ul>");
+  html = html.replace(/^[\*\-]\s+(.+)$/gm, "<li class='bullet'>$1</li>");
+  html = html.replace(/(<li class='bullet'>.*<\/li>\s*)+/g, (match) => `<ul>\n${match}</ul>\n`);
 
   // Numbered Lists
-  html = html.replace(/^\d+\.\s+(.+)$/gm, "<li>$1</li>");
-  // Wrap sequential lists but ensure they don't break simple structures
-  html = html.replace(/(<li>[\s\S]*<\/li>)/g, (match) => {
-    if (match.includes("<ul>")) return match;
-    return `<ol>${match}</ol>`;
-  });
+  html = html.replace(/^\d+\.\s+(.+)$/gm, "<li class='number'>$1</li>");
+  html = html.replace(/(<li class='number'>.*<\/li>\s*)+/g, (match) => `<ol>\n${match}</ol>\n`);
 
   // Images
   html = html.replace(/!\[([^\]]*)\]\(([^)]+)\)/g, '<img src="$2" alt="$1" class="preview-img" />');
@@ -61,8 +58,8 @@ export function parseMarkdownToHtml(markdown: string): string {
   html = html.replace(/\*([^*]+)\*/g, "<em>$1</em>");
   html = html.replace(/_([^_]+)_/g, "<em>$1</em>");
 
-  // Paragraphs (split by double newlines)
-  const blocks = html.split(/\n\n+/);
+  // Paragraphs (split by at least two newlines, tolerant of ANY whitespace in between)
+  const blocks = html.split(/\n\s*\n+/);
   const formattedBlocks = blocks.map((block) => {
     const trimmed = block.trim();
     if (!trimmed) return "";
@@ -83,9 +80,11 @@ export function parseMarkdownToHtml(markdown: string): string {
   return formattedBlocks.join("\n");
 }
 
-export default function MarkdownEditor({ value, onChange, placeholder = "Write in Markdown..." }: MarkdownEditorProps) {
+export default function MarkdownEditor({ value, onChange, placeholder = "Write in Markdown...", onImageUpload }: MarkdownEditorProps) {
   const [activeTab, setActiveTab] = useState<"edit" | "preview" | "split">("split");
+  const [uploading, setUploading] = useState(false);
   const textareaRef = useRef<HTMLTextAreaElement>(null);
+  const fileInputRef = useRef<HTMLInputElement>(null);
 
   // Set split mode default based on width
   useEffect(() => {
@@ -122,6 +121,31 @@ export default function MarkdownEditor({ value, onChange, placeholder = "Write i
     }, 0);
   };
 
+  const handleImageUploadClick = () => {
+    if (onImageUpload && fileInputRef.current) {
+      fileInputRef.current.click();
+    } else {
+      insertText("![Alt text](", ")");
+    }
+  };
+
+  const handleFileChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    if (e.target.files && e.target.files[0] && onImageUpload) {
+      const file = e.target.files[0];
+      setUploading(true);
+      try {
+        const url = await onImageUpload(file);
+        insertText(`![${file.name}](${url})\n`);
+      } catch (err) {
+        alert("Failed to upload image.");
+        console.error(err);
+      } finally {
+        setUploading(false);
+        if (fileInputRef.current) fileInputRef.current.value = "";
+      }
+    }
+  };
+
   const toolbarActions = [
     { label: "B", tooltip: "Bold", action: () => insertText("**", "**") },
     { label: "I", tooltip: "Italic", action: () => insertText("*", "*") },
@@ -132,11 +156,20 @@ export default function MarkdownEditor({ value, onChange, placeholder = "Write i
     { label: "List", tooltip: "Bullet List", action: () => insertText("- ", "") },
     { label: "Num", tooltip: "Numbered List", action: () => insertText("1. ", "") },
     { label: "Link", tooltip: "Hyperlink", action: () => insertText("[", "](url)") },
-    { label: "Img", tooltip: "Inline Image", action: () => insertText("![Alt text](", ")") },
+    { label: uploading ? "..." : "Img", tooltip: "Upload Image", action: handleImageUploadClick },
   ];
 
   return (
     <div className="md-editor-container">
+      {/* Hidden File Input for inline images */}
+      <input 
+        type="file" 
+        ref={fileInputRef} 
+        onChange={handleFileChange} 
+        accept="image/*" 
+        style={{ display: 'none' }} 
+      />
+
       {/* Toolbar & Tabs Header */}
       <div className="md-editor-header">
         <div className="md-toolbar">
@@ -311,10 +344,44 @@ export default function MarkdownEditor({ value, onChange, placeholder = "Write i
           min-height: 400px;
         }
         .md-preview-pane {
-          padding: 16px;
+          padding: 16px 24px;
           overflow-y: auto;
           max-height: 500px;
           background: rgba(15, 23, 42, 0.2);
+          color: var(--fg-muted);
+          font-size: 16px;
+          line-height: 1.8;
+        }
+        .md-preview-pane p {
+          margin-bottom: 24px;
+        }
+        .md-preview-pane h1,
+        .md-preview-pane h2,
+        .md-preview-pane h3 {
+          color: white;
+          font-weight: 700;
+          line-height: 1.3;
+          margin-top: 32px;
+          margin-bottom: 16px;
+        }
+        .md-preview-pane h1 { font-size: 28px; }
+        .md-preview-pane h2 { font-size: 22px; border-bottom: 1px solid var(--border); padding-bottom: 8px; }
+        .md-preview-pane h3 { font-size: 18px; }
+        .md-preview-pane ul,
+        .md-preview-pane ol {
+          margin-bottom: 24px;
+          padding-left: 24px;
+        }
+        .md-preview-pane li {
+          margin-bottom: 8px;
+        }
+        .md-preview-pane blockquote {
+          border-left: 3px solid var(--primary);
+          background: rgba(99, 102, 241, 0.05);
+          padding: 16px 20px;
+          border-radius: 0 8px 8px 0;
+          margin: 24px 0;
+          font-style: italic;
         }
         .md-preview-empty {
           color: var(--fg-dim);
@@ -325,7 +392,7 @@ export default function MarkdownEditor({ value, onChange, placeholder = "Write i
         .preview-img {
           max-width: 100%;
           border-radius: 8px;
-          margin: 12px 0;
+          margin: 24px 0;
           border: 1px solid var(--border);
         }
         @media (max-width: 1023px) {

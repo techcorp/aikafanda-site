@@ -36,6 +36,10 @@ export default function NewBlogPage() {
   const [saving, setSaving] = useState(false);
   const [errorMsg, setErrorMsg] = useState("");
 
+  // Autosave State
+  const [draftId, setDraftId] = useState<string | null>(null);
+  const [autosaveStatus, setAutosaveStatus] = useState<string>("");
+
   // Verify auth session on load
   useEffect(() => {
     async function verifyAuth() {
@@ -49,6 +53,56 @@ export default function NewBlogPage() {
     }
     verifyAuth();
   }, [router]);
+
+  // Autosave Draft logic
+  useEffect(() => {
+    if (checkingAuth || saving) return;
+    if (!title && !content) return; // Don't autosave completely empty forms
+
+    const timer = setTimeout(async () => {
+      setAutosaveStatus("Saving draft...");
+      try {
+        const payload = {
+          title: title || "Untitled Draft",
+          slug: slug || `untitled-draft-${Date.now()}`,
+          excerpt: excerpt.trim() || title || "Draft",
+          content,
+          featured_image: imageUrl || "https://images.unsplash.com/photo-1677442136019-21780efad99a?q=80&w=600&auto=format&fit=crop",
+          category,
+          tags,
+          author_name: authorName || "Hassan A.",
+          status: "draft" as const,
+          read_time: readTime,
+          meta_title: metaTitle || title,
+          meta_description: metaDescription || excerpt || title,
+        };
+
+        if (draftId) {
+          await blogService.updateBlog(draftId, payload);
+          const time = new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+          setAutosaveStatus(`Draft saved at ${time}`);
+        } else {
+          // Check slug uniqueness before creating
+          const existing = await blogService.getBlogBySlug(payload.slug);
+          if (!existing) {
+             const newDraft = await blogService.createBlog(payload);
+             if (newDraft) {
+               setDraftId(newDraft.id);
+               const time = new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+               setAutosaveStatus(`Draft saved at ${time}`);
+               // Update URL to edit route so refreshing doesn't create multiple drafts
+               window.history.replaceState(null, "", `/admin/edit/${newDraft.id}`);
+             }
+          }
+        }
+      } catch (e) {
+        setAutosaveStatus("Autosave failed");
+        console.error("Autosave error", e);
+      }
+    }, 4000); // 4 seconds debounce
+
+    return () => clearTimeout(timer);
+  }, [title, slug, excerpt, content, imageUrl, category, tags, authorName, readTime, metaTitle, metaDescription, draftId, checkingAuth, saving]);
 
   // Handle Slugify title helper
   const handleTitleChange = (val: string) => {
@@ -112,13 +166,13 @@ export default function NewBlogPage() {
     try {
       // Check slug uniqueness
       const existing = await blogService.getBlogBySlug(slug);
-      if (existing) {
+      if (existing && existing.id !== draftId) {
         setErrorMsg("The slug is already taken. Please modify the slug to be unique.");
         setSaving(false);
         return;
       }
 
-      const newBlog = await blogService.createBlog({
+      const payload = {
         title,
         slug,
         excerpt: excerpt.trim() || title,
@@ -131,9 +185,18 @@ export default function NewBlogPage() {
         read_time: readTime,
         meta_title: metaTitle || title,
         meta_description: metaDescription || excerpt || title,
-      });
+      };
 
-      if (newBlog) {
+      let success = false;
+      if (draftId) {
+        const updated = await blogService.updateBlog(draftId, payload);
+        success = !!updated;
+      } else {
+        const newBlog = await blogService.createBlog(payload);
+        success = !!newBlog;
+      }
+
+      if (success) {
         router.push("/admin");
       } else {
         setErrorMsg("Failed to record new blog post in database.");
@@ -184,12 +247,20 @@ export default function NewBlogPage() {
 
       <section className="container new-blog-container">
         {/* Breadcrumb Header */}
-        <div className="new-blog-header">
-          <Link href="/admin" className="back-link">
-            ← Back to CMS Table
-          </Link>
-          <h1 className="form-page-title">Draft New Insight</h1>
-          <p className="form-page-subtitle">Publish fresh research or tech playbooks to the public audience</p>
+        <div className="new-blog-header" style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-end", flexWrap: "wrap", gap: "16px", marginBottom: "32px" }}>
+          <div>
+            <Link href="/admin" className="back-link">
+              ← Back to CMS Table
+            </Link>
+            <h1 className="form-page-title">Draft New Insight</h1>
+            <p className="form-page-subtitle">Publish fresh research or tech playbooks to the public audience</p>
+          </div>
+          {autosaveStatus && (
+            <div className="autosave-status">
+              <span className="autosave-dot"></span>
+              {autosaveStatus}
+            </div>
+          )}
         </div>
 
         <form onSubmit={handleSubmit} className="new-blog-form">
@@ -336,7 +407,11 @@ export default function NewBlogPage() {
           {/* Dynamic Content Markdown Editor */}
           <div className="form-editor-container-box mt-4">
             <h3 className="section-subtitle">Markdown Content Editor *</h3>
-            <MarkdownEditor value={content} onChange={setContent} />
+            <MarkdownEditor 
+              value={content} 
+              onChange={setContent} 
+              onImageUpload={blogService.uploadFeaturedImage}
+            />
           </div>
 
           {/* SEO Meta Information */}
@@ -421,9 +496,24 @@ export default function NewBlogPage() {
           position: relative;
           z-index: 1;
         }
-        .new-blog-header {
-          text-align: left;
-          margin-bottom: 32px;
+        .autosave-status {
+          display: flex;
+          align-items: center;
+          gap: 8px;
+          background: rgba(15, 23, 42, 0.4);
+          border: 1px solid var(--border);
+          padding: 6px 12px;
+          border-radius: 20px;
+          font-size: 12px;
+          font-family: var(--font-mono), monospace;
+          color: var(--fg-muted);
+        }
+        .autosave-dot {
+          width: 6px;
+          height: 6px;
+          border-radius: 50%;
+          background: #10b981;
+          box-shadow: 0 0 8px #10b981;
         }
         .back-link {
           display: inline-flex;

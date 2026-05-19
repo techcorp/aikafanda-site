@@ -435,14 +435,9 @@ export const blogService = {
       const { data } = supabase.storage.from("blog-images").getPublicUrl(filePath);
       return data.publicUrl;
     } else {
-      // Fallback localStorage data URL upload or Unsplash random image picker based on category
-      return new Promise((resolve) => {
-        const reader = new FileReader();
-        reader.onloadend = () => {
-          resolve(reader.result as string);
-        };
-        reader.readAsDataURL(file);
-      });
+      // Fallback: create a temporary blob URL for local testing without cluttering the markdown editor with Base64.
+      // Note: Blob URLs expire on page reload, which is acceptable for local mock mode.
+      return Promise.resolve(URL.createObjectURL(file));
     }
   }
 };

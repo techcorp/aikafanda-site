@@ -41,6 +41,9 @@ export default function EditBlogPage({ params }: EditBlogPageProps) {
   const [saving, setSaving] = useState(false);
   const [errorMsg, setErrorMsg] = useState("");
 
+  // Autosave State
+  const [autosaveStatus, setAutosaveStatus] = useState<string>("");
+
   // Verify auth session & fetch existing blog data
   useEffect(() => {
     async function initPage() {
@@ -82,6 +85,41 @@ export default function EditBlogPage({ params }: EditBlogPageProps) {
     }
     initPage();
   }, [id, router]);
+
+  // Autosave Draft logic
+  useEffect(() => {
+    if (checkingAuth || loadingBlog || saving) return;
+    if (!title && !content) return; // Don't autosave if empty
+
+    const timer = setTimeout(async () => {
+      setAutosaveStatus("Saving draft...");
+      try {
+        const payload = {
+          title: title || "Untitled Draft",
+          slug,
+          excerpt: excerpt.trim() || title || "Draft",
+          content,
+          featured_image: imageUrl || "https://images.unsplash.com/photo-1677442136019-21780efad99a?q=80&w=600&auto=format&fit=crop",
+          category,
+          tags,
+          author_name: authorName || "Hassan A.",
+          status, // Maintain whatever status it currently has
+          read_time: readTime,
+          meta_title: metaTitle || title,
+          meta_description: metaDescription || excerpt || title,
+        };
+
+        await blogService.updateBlog(id, payload);
+        const time = new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+        setAutosaveStatus(`Autosaved at ${time}`);
+      } catch (e) {
+        setAutosaveStatus("Autosave failed");
+        console.error("Autosave error", e);
+      }
+    }, 4000); // 4 seconds debounce
+
+    return () => clearTimeout(timer);
+  }, [title, slug, excerpt, content, imageUrl, category, tags, authorName, status, readTime, metaTitle, metaDescription, id, checkingAuth, loadingBlog, saving]);
 
   // Image Upload helper
   const handleImageFileChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -199,12 +237,20 @@ export default function EditBlogPage({ params }: EditBlogPageProps) {
 
       <section className="container edit-blog-container">
         {/* Breadcrumb Header */}
-        <div className="edit-blog-header">
-          <Link href="/admin" className="back-link">
-            ← Back to CMS Table
-          </Link>
-          <h1 className="form-page-title">Edit Insight</h1>
-          <p className="form-page-subtitle">Update and polish published research or draft playbooks</p>
+        <div className="edit-blog-header" style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-end", flexWrap: "wrap", gap: "16px", marginBottom: "32px" }}>
+          <div>
+            <Link href="/admin" className="back-link">
+              ← Back to CMS Table
+            </Link>
+            <h1 className="form-page-title">Edit Insight</h1>
+            <p className="form-page-subtitle">Update and polish published research or draft playbooks</p>
+          </div>
+          {autosaveStatus && (
+            <div className="autosave-status">
+              <span className="autosave-dot"></span>
+              {autosaveStatus}
+            </div>
+          )}
         </div>
 
         <form onSubmit={handleSubmit} className="edit-blog-form">
@@ -354,7 +400,11 @@ export default function EditBlogPage({ params }: EditBlogPageProps) {
           {/* Dynamic Content Markdown Editor */}
           <div className="form-editor-container-box mt-4">
             <h3 className="section-subtitle">Markdown Content Editor *</h3>
-            <MarkdownEditor value={content} onChange={setContent} />
+            <MarkdownEditor 
+              value={content} 
+              onChange={setContent} 
+              onImageUpload={blogService.uploadFeaturedImage}
+            />
           </div>
 
           {/* SEO Meta Information */}
@@ -439,9 +489,24 @@ export default function EditBlogPage({ params }: EditBlogPageProps) {
           position: relative;
           z-index: 1;
         }
-        .edit-blog-header {
-          text-align: left;
-          margin-bottom: 32px;
+        .autosave-status {
+          display: flex;
+          align-items: center;
+          gap: 8px;
+          background: rgba(15, 23, 42, 0.4);
+          border: 1px solid var(--border);
+          padding: 6px 12px;
+          border-radius: 20px;
+          font-size: 12px;
+          font-family: var(--font-mono), monospace;
+          color: var(--fg-muted);
+        }
+        .autosave-dot {
+          width: 6px;
+          height: 6px;
+          border-radius: 50%;
+          background: #10b981;
+          box-shadow: 0 0 8px #10b981;
         }
         .back-link {
           display: inline-flex;
