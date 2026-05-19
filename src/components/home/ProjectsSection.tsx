@@ -104,8 +104,8 @@ function ProjectVisual({ id, icon, accent, image }: ProjectVisualProps) {
             style={{
               width: "100%",
               height: "100%",
-              objectFit: "contain",
-              objectPosition: "center",
+              objectFit: "cover",
+              objectPosition: "top center",
               opacity: 0.95,
               transition: "transform 0.4s ease",
             }}

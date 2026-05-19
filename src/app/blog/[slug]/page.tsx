@@ -429,7 +429,7 @@ export default function BlogDetailPage({ params }: BlogDetailPageProps) {
           line-height: 1.8;
         }
         .blog-details-content p {
-          margin-bottom: 24px;
+          margin-bottom: 16px;
           text-wrap: pretty;
         }
         .blog-details-content h1,
@@ -438,11 +438,11 @@ export default function BlogDetailPage({ params }: BlogDetailPageProps) {
           color: white;
           font-weight: 700;
           line-height: 1.3;
-          margin-top: 40px;
-          margin-bottom: 16px;
+          margin-top: 32px;
+          margin-bottom: 12px;
         }
         .blog-details-content h1 { font-size: 30px; }
-        .blog-details-content h2 { font-size: 24px; border-bottom: 1px solid var(--border); padding-bottom: 8px; }
+        .blog-details-content h2 { font-size: 24px; border-bottom: 1px solid var(--border); padding-bottom: 6px; }
         .blog-details-content h3 { font-size: 20px; }
         
         .blog-details-content strong {
@@ -457,17 +457,17 @@ export default function BlogDetailPage({ params }: BlogDetailPageProps) {
           background: rgba(99, 102, 241, 0.05);
           padding: 16px 20px;
           border-radius: 0 8px 8px 0;
-          margin: 24px 0;
+          margin: 16px 0;
           font-style: italic;
           color: var(--fg-muted);
         }
         .blog-details-content ul,
         .blog-details-content ol {
-          margin-bottom: 24px;
+          margin-bottom: 16px;
           padding-left: 20px;
         }
         .blog-details-content li {
-          margin-bottom: 8px;
+          margin-bottom: 6px;
         }
         .blog-details-content pre {
           background: rgba(15, 23, 42, 0.8);

@@ -353,7 +353,7 @@ export default function MarkdownEditor({ value, onChange, placeholder = "Write i
           line-height: 1.8;
         }
         .md-preview-pane p {
-          margin-bottom: 24px;
+          margin-bottom: 16px;
         }
         .md-preview-pane h1,
         .md-preview-pane h2,
@@ -362,25 +362,25 @@ export default function MarkdownEditor({ value, onChange, placeholder = "Write i
           font-weight: 700;
           line-height: 1.3;
           margin-top: 32px;
-          margin-bottom: 16px;
+          margin-bottom: 12px;
         }
         .md-preview-pane h1 { font-size: 28px; }
-        .md-preview-pane h2 { font-size: 22px; border-bottom: 1px solid var(--border); padding-bottom: 8px; }
+        .md-preview-pane h2 { font-size: 22px; border-bottom: 1px solid var(--border); padding-bottom: 6px; }
         .md-preview-pane h3 { font-size: 18px; }
         .md-preview-pane ul,
         .md-preview-pane ol {
-          margin-bottom: 24px;
+          margin-bottom: 16px;
           padding-left: 24px;
         }
         .md-preview-pane li {
-          margin-bottom: 8px;
+          margin-bottom: 6px;
         }
         .md-preview-pane blockquote {
           border-left: 3px solid var(--primary);
           background: rgba(99, 102, 241, 0.05);
           padding: 16px 20px;
           border-radius: 0 8px 8px 0;
-          margin: 24px 0;
+          margin: 16px 0;
           font-style: italic;
         }
         .md-preview-empty {
