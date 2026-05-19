@@ -256,7 +256,9 @@ export interface AppData {
   tag: string;
   desc: string;
   accent: string;
-  screen: "terminal" | "stylist" | "soon";
+  screen?: "terminal" | "stylist" | "soon";
+  image?: string;
+  link?: string;
   placeholder?: boolean;
 }
 
@@ -264,27 +266,29 @@ export const APPS: AppData[] = [
   {
     id: "termuxpert",
     name: "TermuXpert",
-    tag: "Developer tooling",
-    desc: "Mobile-first Termux companion with AI-assisted shell, snippet vault and one-tap setup recipes.",
+    tag: "Developer Tooling",
+    desc: "All-in-one companion to master Termux, Linux commands, and Android automation. Features an AI-assisted shell and one-tap setup recipes.",
     accent: "#22D3EE",
-    screen: "terminal",
+    image: "/termuxpert.jpg",
+    link: "https://play.google.com/store/apps/details?id=io.termuxpert.app",
   },
   {
     id: "stylesnap",
-    name: "StyleSnap AI Stylist",
+    name: "StyleSnap AI",
     tag: "Fashion · AI",
-    desc: "Snap your closet, get outfit suggestions for any occasion — fully personalised to your wardrobe and weather.",
+    desc: "Snap any outfit to get an AI style score, color palette, and personalized improvement tips from a virtual senior stylist.",
     accent: "#E879F9",
-    screen: "stylist",
+    image: "/stylesnap.jpg",
+    link: "https://play.google.com/store/apps/details?id=com.stylesnapai.app",
   },
   {
-    id: "soon-app",
-    name: "Coming soon",
-    tag: "In development",
-    desc: "Our next consumer app is in private beta. Want early access or want to white-label something similar?",
-    accent: "var(--fg-muted)",
-    screen: "soon",
-    placeholder: true,
+    id: "ruya",
+    name: "Khwab ki Tabeer (Ruya AI)",
+    tag: "Lifestyle · AI",
+    desc: "Your modern companion for Islamic dream interpretation, providing respectful insights inspired by classical scholars like Ibn Sirin.",
+    accent: "#10b981",
+    image: "/ruya.jpg",
+    link: "https://play.google.com/store/apps/details?id=com.technicalcorp.khwaabkitabeer",
   },
 ];
 
