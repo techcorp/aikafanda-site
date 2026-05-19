@@ -136,9 +136,9 @@ export default function MarkdownEditor({ value, onChange, placeholder = "Write i
       try {
         const url = await onImageUpload(file);
         insertText(`![${file.name}](${url})\n`);
-      } catch (err) {
-        alert("Failed to upload image.");
-        console.error(err);
+      } catch (err: any) {
+        alert("Failed to upload image: " + (err.message || "Unknown error"));
+        console.error("Upload error details:", err);
       } finally {
         setUploading(false);
         if (fileInputRef.current) fileInputRef.current.value = "";
