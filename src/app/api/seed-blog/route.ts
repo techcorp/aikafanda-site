@@ -6,7 +6,7 @@ export async function GET() {
 
 Not long ago, "agentic AI" was the kind of phrase that appeared in investor decks and keynote slides far more often than in production systems. In 2025, it was everywhere — and almost nowhere at once. Vendors slapped the label on anything that could string two API calls together. Analysts debated definitions. Developers built prototypes that rarely survived their first real-world test.
 
-![Agentic Communication vs Orchestration](/blog-images/agentic/After%20Introduction%20Section.jpeg)
+![Agentic Communication vs Orchestration](/blog-images/agentic/after-intro.jpeg)
 
 2026 changed that.
 
@@ -42,7 +42,7 @@ The result is a system that doesn't just respond to the world — it acts in it.
 
 Understanding what makes agentic AI different requires a look under the hood. The architectural gap between a chatbot and a true AI agent is significant.
 
-![The AI Agent Loop](/blog-images/agentic/Under%20Architecture%20Behind%20Autonomous%20AI%20Agents.png)
+![The AI Agent Loop](/blog-images/agentic/architecture.png)
 
 ### From Single-Turn to Multi-Step Reasoning
 
@@ -74,7 +74,7 @@ This is not infallible. Agents can still pursue goals in ways that produce techn
 
 Task decomposition is the cognitive engine of agentic AI. It is the process by which a high-level goal — "prepare a competitive analysis of our top three rivals" — becomes a structured sequence of executable steps.
 
-![Agent Goal Decomposition](/blog-images/agentic/Under%20Task%20Decomposition%20Section.png)
+![Agent Goal Decomposition](/blog-images/agentic/task-decomposition.png)
 
 Here is how a capable agentic system might decompose that goal:
 
@@ -96,7 +96,7 @@ This is why agentic systems are architecturally incompatible with the prompt-res
 
 The most credible evidence for agentic AI's maturity is not benchmark performance. It is production outcomes across specific industry verticals.
 
-![Agentic Industry Applications](/blog-images/agentic/Under%20Real-World%20Applications%20Section.png)
+![Agentic Industry Applications](/blog-images/agentic/real-world.png)
 
 ### Software Engineering
 
@@ -225,7 +225,7 @@ The question is no longer whether autonomous AI agents can do useful work. The q
     slug: "agentic-ai-2026-beyond-buzzword",
     excerpt: "Agentic AI has evolved from a 2025 buzzword to real enterprise deployment in 2026. Discover how autonomous AI agents plan, reason, and execute complex workflows independently.",
     content: content,
-    featured_image: "/blog-images/agentic/Hero%20Image%20Top%20of%20Post%20%20Title%20Section.jpeg",
+    featured_image: "/blog-images/agentic/hero.jpeg",
     category: "AI & Emerging Technology",
     tags: "Agentic AI, Autonomous AI Agents, AI Architecture 2026, Multi-Agent Systems",
     author_name: "Technical Corp",
