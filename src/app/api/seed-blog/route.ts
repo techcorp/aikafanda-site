@@ -6,7 +6,7 @@ export async function GET() {
 
 Not long ago, "agentic AI" was the kind of phrase that appeared in investor decks and keynote slides far more often than in production systems. In 2025, it was everywhere — and almost nowhere at once. Vendors slapped the label on anything that could string two API calls together. Analysts debated definitions. Developers built prototypes that rarely survived their first real-world test.
 
-![Agentic Communication vs Orchestration](/blog-images/agentic/img1.jpg)
+![Agentic Communication vs Orchestration](/blog-images/agentic/After%20Introduction%20Section.jpeg)
 
 2026 changed that.
 
@@ -42,7 +42,7 @@ The result is a system that doesn't just respond to the world — it acts in it.
 
 Understanding what makes agentic AI different requires a look under the hood. The architectural gap between a chatbot and a true AI agent is significant.
 
-![The AI Agent Loop](/blog-images/agentic/img4.jpg)
+![The AI Agent Loop](/blog-images/agentic/Under%20Architecture%20Behind%20Autonomous%20AI%20Agents.png)
 
 ### From Single-Turn to Multi-Step Reasoning
 
@@ -74,7 +74,7 @@ This is not infallible. Agents can still pursue goals in ways that produce techn
 
 Task decomposition is the cognitive engine of agentic AI. It is the process by which a high-level goal — "prepare a competitive analysis of our top three rivals" — becomes a structured sequence of executable steps.
 
-![Agent Goal Decomposition](/blog-images/agentic/img2.jpg)
+![Agent Goal Decomposition](/blog-images/agentic/Under%20Task%20Decomposition%20Section.png)
 
 Here is how a capable agentic system might decompose that goal:
 
@@ -96,7 +96,7 @@ This is why agentic systems are architecturally incompatible with the prompt-res
 
 The most credible evidence for agentic AI's maturity is not benchmark performance. It is production outcomes across specific industry verticals.
 
-![Agentic Industry Applications](/blog-images/agentic/img3.jpg)
+![Agentic Industry Applications](/blog-images/agentic/Under%20Real-World%20Applications%20Section.png)
 
 ### Software Engineering
 
@@ -182,8 +182,6 @@ If a vendor's system cannot demonstrate all five capabilities in a real workflow
 
 Beyond individual agents, 2026 has seen the emergence of multi-agent systems as a distinct architectural pattern — and, for complex enterprise workflows, arguably the more important one.
 
-![Multi-Agent Orchestration](/blog-images/agentic/img5.jpg)
-
 The core idea is that complex business processes rarely have single owners. They cross team boundaries, require different types of expertise at different stages, and involve data from many sources. A single agent with a large context window can handle some of this — but orchestration patterns, where a coordinator agent routes sub-tasks to specialized agents, can handle more.
 
 At Zapier, 800+ AI agents were deployed internally, with 89% AI adoption across the organization. At Fountain, hierarchical multi-agent orchestration achieved 50% faster screening, 40% quicker onboarding, and a 2x improvement in candidate conversions — cutting one customer's staffing time from several weeks to under 72 hours.
@@ -227,7 +225,7 @@ The question is no longer whether autonomous AI agents can do useful work. The q
     slug: "agentic-ai-2026-beyond-buzzword",
     excerpt: "Agentic AI has evolved from a 2025 buzzword to real enterprise deployment in 2026. Discover how autonomous AI agents plan, reason, and execute complex workflows independently.",
     content: content,
-    featured_image: "/blog-images/agentic/img5.jpg",
+    featured_image: "/blog-images/agentic/Hero%20Image%20Top%20of%20Post%20%20Title%20Section.jpeg",
     category: "AI & Emerging Technology",
     tags: "Agentic AI, Autonomous AI Agents, AI Architecture 2026, Multi-Agent Systems",
     author_name: "Technical Corp",
@@ -240,12 +238,9 @@ The question is no longer whether autonomous AI agents can do useful work. The q
     published_at: new Date().toISOString(),
   };
 
-  const { error } = await supabase.from('blogs').insert(newBlog);
+  const { error } = await supabase.from('blogs').upsert(newBlog);
 
   if (error) {
-    if (error.code === '23505') {
-      return NextResponse.json({ message: "Blog post already exists!" });
-    }
     return NextResponse.json({ error: error.message }, { status: 500 });
   }
 
