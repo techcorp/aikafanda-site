@@ -222,7 +222,7 @@ The question is no longer whether autonomous AI agents can do useful work. The q
 `;
 
   const newBlog = {
-    id: "agentic-ai-2026",
+    id: "a0eebc99-9c0b-4ef8-bb6d-6bb9bd380a11",
     title: "Agentic AI in 2026: Beyond the Buzzword",
     slug: "agentic-ai-2026-beyond-buzzword",
     excerpt: "Agentic AI has evolved from a 2025 buzzword to real enterprise deployment in 2026. Discover how autonomous AI agents plan, reason, and execute complex workflows independently.",
