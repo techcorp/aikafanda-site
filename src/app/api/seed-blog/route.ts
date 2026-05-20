@@ -237,8 +237,11 @@ The question is no longer whether autonomous AI agents can do useful work. The q
     updated_at: new Date().toISOString(),
     published_at: new Date().toISOString(),
   };
+  // Delete old version first (RLS blocks upsert/update)
+  await supabase.from('blogs').delete().eq('id', 'a0eebc99-9c0b-4ef8-bb6d-6bb9bd380a11');
+  await supabase.from('blogs').delete().eq('slug', 'agentic-ai-2026-beyond-buzzword');
 
-  const { error } = await supabase.from('blogs').upsert(newBlog);
+  const { error } = await supabase.from('blogs').insert(newBlog);
 
   if (error) {
     return NextResponse.json({ error: error.message }, { status: 500 });
