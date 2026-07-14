@@ -2,15 +2,15 @@ import { NextResponse } from "next/server";
 import type { NextRequest } from "next/server";
 
 export function middleware(request: NextRequest) {
-  if (request.nextUrl.pathname === "/admin") {
-    const url = request.nextUrl.clone();
-    url.pathname = "/admin/index.html";
-    return NextResponse.rewrite(url);
+  if (request.nextUrl.pathname.startsWith("/admin")) {
+    return NextResponse.redirect(
+      process.env.BLOGGER_ADMIN_URL || "https://www.blogger.com/"
+    );
   }
 
   return NextResponse.next();
 }
 
 export const config = {
-  matcher: ["/admin"],
+  matcher: ["/admin", "/admin/:path*"],
 };

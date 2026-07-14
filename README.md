@@ -1,53 +1,41 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# AIKaFanda Website
 
-## Getting Started
+## Local development
 
-First, run the development server:
+Run:
 
 ```bash
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Then open [http://localhost:3000](http://localhost:3000).
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+## Environment variables
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+Create `.env.local` with:
 
-## Learn More
+```env
+NEXT_PUBLIC_SITE_URL=https://www.aikafanda.com
+BLOGGER_SITE_URL=https://your-blog-name.blogspot.com
+BLOGGER_ADMIN_URL=https://www.blogger.com
+RESEND_API_KEY=
+RESEND_FROM_EMAIL=
+CONTACT_RECEIVER_EMAIL=
+```
 
-To learn more about Next.js, take a look at the following resources:
+## Blogger integration
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+The website blog now reads posts directly from Blogger.
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+- `BLOGGER_SITE_URL` is required.
+- The site fetches the public Blogger feed and renders posts on `/blog`.
+- Individual posts are shown on `/blog/[slug]` using your website design.
+- Visiting `/admin` redirects to `BLOGGER_ADMIN_URL` if set, otherwise to Blogger.
 
-## Deploy on Vercel
+## Contact form
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+Set these for email delivery through Resend:
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
-
-## 📧 Email Integration Setup (Resend)
-
-The contact form is connected to **Resend** for reliable and secure email delivery. To enable email notifications for new leads:
-
-1. Create a free account at [Resend](https://resend.com/).
-2. Copy the `.env.example` file to `.env.local`:
-   ```bash
-   cp .env.example .env.local
-   ```
-3. Update the credentials in `.env.local`:
-   * `RESEND_API_KEY`: Your Resend API key (starts with `re_`).
-   * `RESEND_FROM_EMAIL`: A verified domain email address inside your Resend dashboard (defaults to `onboarding@resend.dev` for testing).
-   * `CONTACT_RECEIVER_EMAIL`: The recipient address where form notifications are sent (e.g. `technicalcorp700@gmail.com`).
-
-Note: If no API key is specified, form submissions will run in sandbox/simulation mode where leads are safely outputted to the server console.
-
+- `RESEND_API_KEY`
+- `RESEND_FROM_EMAIL`
+- `CONTACT_RECEIVER_EMAIL`

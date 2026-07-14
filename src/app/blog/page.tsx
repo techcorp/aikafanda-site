@@ -14,10 +14,12 @@ export const metadata = {
   },
 };
 
-export default function BlogPage() {
-  const posts = getPublishedPosts();
-  const categories = getAllCategories();
-  const tags = getAllTags();
+export default async function BlogPage() {
+  const [posts, categories, tags] = await Promise.all([
+    getPublishedPosts(),
+    getAllCategories(),
+    getAllTags(),
+  ]);
 
   return (
     <main className="blog-page-container">

@@ -11,7 +11,7 @@ function escapeXml(str: string): string {
 }
 
 export async function GET(): Promise<Response> {
-  const posts = getPublishedPosts();
+  const posts = await getPublishedPosts();
 
   const items = posts
     .map(

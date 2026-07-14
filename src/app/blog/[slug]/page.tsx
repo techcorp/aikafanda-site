@@ -2,9 +2,6 @@ import React from "react";
 import { notFound } from "next/navigation";
 import Link from "next/link";
 import type { Metadata } from "next";
-import ReactMarkdown from "react-markdown";
-import remarkGfm from "remark-gfm";
-import rehypeSanitize from "rehype-sanitize";
 import { siteConfig } from "@/lib/siteConfig";
 import {
   getPostBySlug,
@@ -26,7 +23,7 @@ function formatDate(dateStr: string): string {
 }
 
 export async function generateStaticParams() {
-  const slugs = getAllPostSlugs();
+  const slugs = await getAllPostSlugs();
   return slugs.map((slug) => ({ slug }));
 }
 
@@ -34,7 +31,7 @@ export async function generateMetadata({
   params,
 }: BlogDetailPageProps): Promise<Metadata> {
   const { slug } = await params;
-  const post = getPostBySlug(slug);
+  const post = await getPostBySlug(slug);
 
   if (!post || post.status !== "published") {
     return { title: "Post Not Found" };
@@ -46,7 +43,7 @@ export async function generateMetadata({
     title: post.seoTitle || post.title,
     description: post.seoDescription || post.excerpt,
     alternates: {
-      canonical: post.canonicalUrl || url,
+      canonical: url,
     },
     openGraph: {
       title: post.seoTitle || post.title,
@@ -69,13 +66,13 @@ export async function generateMetadata({
 
 export default async function BlogDetailPage({ params }: BlogDetailPageProps) {
   const { slug } = await params;
-  const post = getPostBySlug(slug);
+  const post = await getPostBySlug(slug);
 
   if (!post || post.status !== "published") {
     notFound();
   }
 
-  const relatedPosts = getRelatedPosts(post, 3);
+  const relatedPosts = await getRelatedPosts(post, 3);
   const url = `${siteConfig.url}/blog/${post.slug}`;
 
   const jsonLd = {
@@ -212,34 +209,7 @@ export default async function BlogDetailPage({ params }: BlogDetailPageProps) {
 
           <section className="detail-main-text">
             <div className="blog-details-content">
-              <ReactMarkdown
-                remarkPlugins={[remarkGfm]}
-                rehypePlugins={[rehypeSanitize]}
-                components={{
-                  img: ({ src = "", alt = "", ...props }) => (
-                    // eslint-disable-next-line @next/next/no-img-element
-                    <img
-                      src={src}
-                      alt={alt}
-                      loading="lazy"
-                      decoding="async"
-                      {...props}
-                    />
-                  ),
-                  a: ({ href = "", children, ...props }) => (
-                    <a
-                      href={href}
-                      target={href.startsWith("http") ? "_blank" : undefined}
-                      rel={href.startsWith("http") ? "noopener noreferrer" : undefined}
-                      {...props}
-                    >
-                      {children}
-                    </a>
-                  ),
-                }}
-              >
-                {post.content}
-              </ReactMarkdown>
+              <div dangerouslySetInnerHTML={{ __html: post.content }} />
             </div>
           </section>
         </div>
