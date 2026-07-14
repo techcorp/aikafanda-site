@@ -93,10 +93,42 @@ function stripHtml(html: string): string {
 
 function sanitizeHtml(html: string): string {
   return html
+    .replace(
+      /<div class="separator"[^>]*>\s*<a[^>]+href="([^"]*blogger\.googleusercontent\.com[^"]+)"[^>]*>\s*(<img[\s\S]*?>)\s*<\/a>\s*<\/div>/gi,
+      (_match, href, imageTag) => `<figure class="blog-inline-media"><img src="${normalizeImageUrl(href)}"${imageTag
+        .replace(/^<img/i, "")
+        .replace(/\s+src="[^"]*"/i, "")
+        .replace(/\s+style="[^"]*"/gi, "")
+        .replace(/\s+border="[^"]*"/gi, "")
+        .replace(/\s+width="[^"]*"/gi, "")
+        .replace(/\s+height="[^"]*"/gi, "")
+        .replace(/\s+data-original-[^=]+="[^"]*"/gi, "")
+      }</figure>`
+    )
+    .replace(/<div class="separator"[^>]*>\s*(<img[\s\S]*?>)\s*<\/div>/gi, '<figure class="blog-inline-media">$1</figure>')
     .replace(/<script[\s\S]*?<\/script>/gi, "")
     .replace(/<style[\s\S]*?<\/style>/gi, "")
+    .replace(/\s+(?:imageanchor|border|data-original-height|data-original-width|width|height|style)="[^"]*"/gi, "")
     .replace(/\son\w+=(["']).*?\1/gi, "")
-    .replace(/\sjavascript:/gi, " ");
+    .replace(/\sjavascript:/gi, " ")
+    .replace(/<p>\s*(?:<br\s*\/?>|\u00a0|\s)*<\/p>/gi, "")
+    .replace(/<br\s*\/?>\s*<br\s*\/?>/gi, "<br />")
+    .trim();
+}
+
+function stripLeadingFeaturedImage(html: string, featuredImage: string): string {
+  if (!featuredImage) return html;
+
+  const normalizedFeaturedImage = normalizeImageUrl(featuredImage);
+
+  return html.replace(
+    /^(?:\s|<p>\s*(?:<br\s*\/?>|\u00a0|\s)*<\/p>)*(<figure class="blog-inline-media">[\s\S]*?<\/figure>)/i,
+    (match, figure) => {
+      const srcMatch = figure.match(/<img[^>]+src="([^"]+)"/i);
+      const figureImage = normalizeImageUrl(srcMatch?.[1]);
+      return figureImage === normalizedFeaturedImage ? "" : match;
+    }
+  );
 }
 
 function slugFromUrl(url: string): string {
@@ -176,6 +208,10 @@ function parseEntry(entry: BloggerEntry, index: number): BlogPost | null {
   const author = entry.author?.[0]?.name?.$t?.trim() || "AIKaFanda Team";
   const authorImage = normalizeImageUrl(entry.author?.[0]?.gd$image?.src);
   const safeAuthorImage = authorImage.includes("b16-rounded.gif") ? "" : authorImage;
+  const cleanedContent = stripLeadingFeaturedImage(
+    sanitizeHtml(contentHtml),
+    featuredImage
+  );
 
   return {
     title,
@@ -196,7 +232,7 @@ function parseEntry(entry: BloggerEntry, index: number): BlogPost | null {
     canonicalUrl: alternateUrl,
     ogImage: featuredImage,
     readingTime: readingTime(plainText).text,
-    content: sanitizeHtml(contentHtml),
+    content: cleanedContent,
   };
 }
 
