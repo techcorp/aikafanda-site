@@ -48,11 +48,36 @@ export async function GET(req: NextRequest) {
   <body>
     <script>
       (function() {
+        function candidateOrigins() {
+          var origin = window.location.origin;
+          var origins = [origin];
+          var url = new URL(origin);
+
+          if (url.hostname.indexOf("www.") === 0) {
+            url.hostname = url.hostname.slice(4);
+            origins.push(url.origin);
+          } else {
+            url.hostname = "www." + url.hostname;
+            origins.push(url.origin);
+          }
+
+          origins.push("*");
+
+          return origins.filter(function(value, index, list) {
+            return list.indexOf(value) === index;
+          });
+        }
+
         function sendMsg(msg) {
           var opener = window.opener;
           if (opener) {
-            opener.postMessage(msg, window.location.origin);
-            window.close();
+            candidateOrigins().forEach(function(origin) {
+              opener.postMessage(msg, origin);
+            });
+
+            setTimeout(function() {
+              window.close();
+            }, 300);
           }
         }
         sendMsg("authorization:github:success:${escapedPayload}");
