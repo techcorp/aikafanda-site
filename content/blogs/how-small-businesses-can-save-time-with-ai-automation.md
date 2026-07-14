@@ -117,8 +117,6 @@ AI can assist with:
 
 Rather than replacing marketers, AI helps them produce quality content faster.
 
-![Small business using AI marketing automation to create content and manage campaigns](/images/blogs/ai-marketing-automation.webp)
-
 - - -
 
 ## 5. Simplify Appointment Scheduling
