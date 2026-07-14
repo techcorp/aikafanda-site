@@ -120,8 +120,16 @@ function normalizeImageUrl(url?: string): string {
 }
 
 function extractFirstImage(html: string): string {
-  const match = html.match(/<img[^>]+src=["']([^"']+)["']/i);
-  return normalizeImageUrl(match?.[1]);
+  const linkedImageMatch = html.match(
+    /<a[^>]+href=["']([^"']*blogger\.googleusercontent\.com[^"']+)["'][^>]*>\s*<img/i
+  );
+
+  if (linkedImageMatch?.[1]) {
+    return normalizeImageUrl(linkedImageMatch[1]);
+  }
+
+  const imageMatch = html.match(/<img[^>]+src=["']([^"']+)["']/i);
+  return normalizeImageUrl(imageMatch?.[1]);
 }
 
 function buildExcerpt(summary: string, content: string): string {
@@ -162,9 +170,8 @@ function parseEntry(entry: BloggerEntry, index: number): BlogPost | null {
   const contentHtml = entry.content?.$t?.trim() || "";
   const summary = entry.summary?.$t?.trim() || "";
   const { category, tags, featured } = parseLabels(entry);
-  const featuredImage = normalizeImageUrl(
-    entry.media$thumbnail?.url || extractFirstImage(contentHtml)
-  );
+  const extractedImage = extractFirstImage(contentHtml);
+  const featuredImage = extractedImage || normalizeImageUrl(entry.media$thumbnail?.url);
   const plainText = stripHtml(contentHtml || summary);
   const author = entry.author?.[0]?.name?.$t?.trim() || "AIKaFanda Team";
   const authorImage = normalizeImageUrl(entry.author?.[0]?.gd$image?.src);
