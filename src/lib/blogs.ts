@@ -49,6 +49,31 @@ interface RawFrontmatter {
   readingTime?: string;
 }
 
+function normalizeImagePath(imagePath?: string): string {
+  if (!imagePath) return "";
+
+  const trimmed = imagePath.trim();
+  if (!trimmed) return "";
+
+  const normalized = trimmed.replace(
+    /(\.(?:png|jpe?g|webp|gif|svg))(?:\1)+$/i,
+    "$1"
+  );
+
+  if (normalized.startsWith("http://") || normalized.startsWith("https://")) {
+    return normalized;
+  }
+
+  return normalized.startsWith("/") ? normalized : `/${normalized}`;
+}
+
+function normalizeMarkdownContent(markdown: string): string {
+  return markdown.replace(
+    /(\.(?:png|jpe?g|webp|gif|svg))(?:\1)+/gi,
+    "$1"
+  );
+}
+
 function getBlogsDirectory(): string {
   if (!fs.existsSync(BLOGS_DIR)) {
     fs.mkdirSync(BLOGS_DIR, { recursive: true });
@@ -106,6 +131,7 @@ function parsePost(filePath: string): BlogPost | null {
   }
 
   const computedReadingTime = readingTime(content).text;
+  const normalizedContent = normalizeMarkdownContent(content);
 
   return {
     title: frontmatter.title,
@@ -114,8 +140,8 @@ function parsePost(filePath: string): BlogPost | null {
     date: frontmatter.date || new Date().toISOString(),
     updatedDate: frontmatter.updatedDate,
     author: frontmatter.author || "AIKaFanda Team",
-    authorImage: frontmatter.authorImage,
-    featuredImage: frontmatter.featuredImage || "",
+    authorImage: normalizeImagePath(frontmatter.authorImage),
+    featuredImage: normalizeImagePath(frontmatter.featuredImage),
     featuredImageAlt: frontmatter.featuredImageAlt || frontmatter.title,
     category: frontmatter.category || "Technology",
     tags: Array.isArray(frontmatter.tags) ? frontmatter.tags : [],
@@ -124,9 +150,9 @@ function parsePost(filePath: string): BlogPost | null {
     seoTitle: frontmatter.seoTitle || frontmatter.title,
     seoDescription: frontmatter.seoDescription || frontmatter.excerpt || "",
     canonicalUrl: frontmatter.canonicalUrl,
-    ogImage: frontmatter.ogImage || frontmatter.featuredImage,
+    ogImage: normalizeImagePath(frontmatter.ogImage || frontmatter.featuredImage),
     readingTime: frontmatter.readingTime || computedReadingTime,
-    content,
+    content: normalizedContent,
   };
 }
 
@@ -162,14 +188,7 @@ export function getFeaturedPosts(): BlogPost[] {
 }
 
 export function getPostBySlug(slug: string): BlogPost | null {
-  for (const dir of getCandidateDirectories()) {
-    const filePath = path.join(dir, `${slug}.md`);
-    if (fs.existsSync(filePath)) {
-      return parsePost(filePath);
-    }
-  }
-
-  return null;
+  return getAllPosts().find((post) => post.slug === slug) || null;
 }
 
 export function getAllPostSlugs(): string[] {
