@@ -54,9 +54,15 @@ export default function BlogListClient({
   }, [initialPosts, activeCategory, activeTag, search]);
 
   const featuredPost = initialPosts.find((p) => p.featured);
-  const regularPosts = filteredPosts.filter(
-    (p) => featuredPost?.slug !== p.slug
-  );
+  const shouldShowFeatured =
+    !!featuredPost &&
+    activeCategory === "All" &&
+    !activeTag &&
+    !search.trim() &&
+    filteredPosts.some((p) => p.slug === featuredPost.slug);
+  const visiblePosts = shouldShowFeatured
+    ? filteredPosts.filter((p) => p.slug !== featuredPost?.slug)
+    : filteredPosts;
 
   return (
     <>
@@ -106,7 +112,7 @@ export default function BlogListClient({
         ))}
       </div>
 
-      {featuredPost && activeCategory === "All" && !activeTag && !search.trim() && (
+      {shouldShowFeatured && featuredPost && (
         <Link
           href={`/blog/${featuredPost.slug}`}
           className="featured-card glass"
@@ -147,7 +153,7 @@ export default function BlogListClient({
         </Link>
       )}
 
-      {regularPosts.length === 0 ? (
+      {filteredPosts.length === 0 ? (
         <div className="blog-empty-container">
           <div className="empty-icon">&#128269;</div>
           <h2>No Articles Found</h2>
@@ -169,9 +175,9 @@ export default function BlogListClient({
             </button>
           )}
         </div>
-      ) : (
+      ) : visiblePosts.length > 0 ? (
         <div className="blog-grid">
-          {regularPosts.map((b) => (
+          {visiblePosts.map((b) => (
             <article key={b.slug} className="blog-card glass">
               <Link
                 href={`/blog/${b.slug}`}
@@ -226,7 +232,7 @@ export default function BlogListClient({
             </article>
           ))}
         </div>
-      )}
+      ) : null}
 
     </>
   );

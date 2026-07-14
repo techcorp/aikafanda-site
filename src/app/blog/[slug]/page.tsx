@@ -212,7 +212,32 @@ export default async function BlogDetailPage({ params }: BlogDetailPageProps) {
 
           <section className="detail-main-text">
             <div className="blog-details-content">
-              <ReactMarkdown remarkPlugins={[remarkGfm]} rehypePlugins={[rehypeSanitize]}>
+              <ReactMarkdown
+                remarkPlugins={[remarkGfm]}
+                rehypePlugins={[rehypeSanitize]}
+                components={{
+                  img: ({ src = "", alt = "", ...props }) => (
+                    // eslint-disable-next-line @next/next/no-img-element
+                    <img
+                      src={src}
+                      alt={alt}
+                      loading="lazy"
+                      decoding="async"
+                      {...props}
+                    />
+                  ),
+                  a: ({ href = "", children, ...props }) => (
+                    <a
+                      href={href}
+                      target={href.startsWith("http") ? "_blank" : undefined}
+                      rel={href.startsWith("http") ? "noopener noreferrer" : undefined}
+                      {...props}
+                    >
+                      {children}
+                    </a>
+                  ),
+                }}
+              >
                 {post.content}
               </ReactMarkdown>
             </div>
