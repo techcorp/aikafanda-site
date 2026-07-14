@@ -3,6 +3,8 @@ import { siteConfig } from "@/lib/siteConfig";
 import { getPublishedPosts, getAllCategories, getAllTags } from "@/lib/blogs";
 import BlogListClient from "./BlogListClient";
 
+export const dynamic = "force-dynamic";
+
 export const metadata = {
   title: "Blog",
   description:

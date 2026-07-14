@@ -103,7 +103,7 @@ function slugFromUrl(url: string): string {
   try {
     const pathname = new URL(url).pathname.replace(/\/+$/, "");
     const slug = pathname.split("/").filter(Boolean).pop() || "";
-    return slug.toLowerCase();
+    return slug.replace(/\.html?$/i, "").toLowerCase();
   } catch {
     return "";
   }
@@ -113,7 +113,9 @@ function normalizeImageUrl(url?: string): string {
   if (!url) return "";
 
   return url
+    .replace(/(\.(?:png|jpe?g|webp|gif|svg))(?:\1)+$/i, "$1")
     .replace(/\/s\d+(-[a-z0-9]+)?\//i, "/s1600/")
+    .replace(/\/w\d+-h\d+(-[a-z0-9]+)?\//i, "/s1600/")
     .replace(/=s\d+(-[a-z0-9]+)?$/i, "=s1600");
 }
 
@@ -166,6 +168,7 @@ function parseEntry(entry: BloggerEntry, index: number): BlogPost | null {
   const plainText = stripHtml(contentHtml || summary);
   const author = entry.author?.[0]?.name?.$t?.trim() || "AIKaFanda Team";
   const authorImage = normalizeImageUrl(entry.author?.[0]?.gd$image?.src);
+  const safeAuthorImage = authorImage.includes("b16-rounded.gif") ? "" : authorImage;
 
   return {
     title,
@@ -174,7 +177,7 @@ function parseEntry(entry: BloggerEntry, index: number): BlogPost | null {
     date: entry.published?.$t || new Date().toISOString(),
     updatedDate: entry.updated?.$t || entry.published?.$t,
     author,
-    authorImage,
+    authorImage: safeAuthorImage,
     featuredImage,
     featuredImageAlt: title,
     category,
