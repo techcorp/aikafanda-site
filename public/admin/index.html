@@ -59,8 +59,13 @@
           '$1"' + window.location.origin + '"'
         );
         const config = window.jsyaml.load(normalizedConfig);
+        const init = window.initCMS || (window.CMS && window.CMS.init);
 
-        window.CMS.init({ config });
+        if (!init) {
+          throw new Error("Decap CMS init function is unavailable.");
+        }
+
+        init({ config });
       })().catch((error) => {
         console.error(error);
         document.body.innerHTML =
