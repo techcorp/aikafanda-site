@@ -59,6 +59,7 @@
           '$1"' + window.location.origin + '"'
         );
         const config = window.jsyaml.load(normalizedConfig);
+        config.load_config_file = false;
         const init = window.initCMS || (window.CMS && window.CMS.init);
 
         if (!init) {
