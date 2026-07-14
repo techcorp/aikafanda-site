@@ -4,6 +4,7 @@ import matter from "gray-matter";
 import readingTime from "reading-time";
 
 const BLOGS_DIR = path.join(process.cwd(), "content", "blogs");
+const LEGACY_BLOGS_DIR = path.join(process.cwd(), "content");
 
 export interface BlogPost {
   title: string;
@@ -55,6 +56,16 @@ function getBlogsDirectory(): string {
   return BLOGS_DIR;
 }
 
+function getCandidateDirectories(): string[] {
+  const directories = [getBlogsDirectory()];
+
+  if (fs.existsSync(LEGACY_BLOGS_DIR)) {
+    directories.push(LEGACY_BLOGS_DIR);
+  }
+
+  return Array.from(new Set(directories));
+}
+
 function readMarkdownFile(filePath: string): { frontmatter: RawFrontmatter; content: string } | null {
   try {
     const raw = fs.readFileSync(filePath, "utf-8");
@@ -104,7 +115,7 @@ function parsePost(filePath: string): BlogPost | null {
     updatedDate: frontmatter.updatedDate,
     author: frontmatter.author || "AIKaFanda Team",
     authorImage: frontmatter.authorImage,
-    featuredImage: frontmatter.featuredImage || "/images/blogs/placeholder.jpg",
+    featuredImage: frontmatter.featuredImage || "",
     featuredImageAlt: frontmatter.featuredImageAlt || frontmatter.title,
     category: frontmatter.category || "Technology",
     tags: Array.isArray(frontmatter.tags) ? frontmatter.tags : [],
@@ -120,14 +131,21 @@ function parsePost(filePath: string): BlogPost | null {
 }
 
 export function getAllPosts(): BlogPost[] {
-  const dir = getBlogsDirectory();
-  const files = fs.readdirSync(dir).filter((f) => f.endsWith(".md"));
+  const files = getCandidateDirectories()
+    .flatMap((dir) =>
+      fs.readdirSync(dir)
+        .filter((f) => f.endsWith(".md"))
+        .map((file) => path.join(dir, file))
+    );
   const posts: BlogPost[] = [];
+  const seenSlugs = new Set<string>();
 
-  for (const file of files) {
-    const filePath = path.join(dir, file);
+  for (const filePath of files) {
     const post = parsePost(filePath);
-    if (post) posts.push(post);
+    if (post && !seenSlugs.has(post.slug)) {
+      posts.push(post);
+      seenSlugs.add(post.slug);
+    }
   }
 
   return posts;
@@ -144,10 +162,14 @@ export function getFeaturedPosts(): BlogPost[] {
 }
 
 export function getPostBySlug(slug: string): BlogPost | null {
-  const dir = getBlogsDirectory();
-  const filePath = path.join(dir, `${slug}.md`);
-  if (!fs.existsSync(filePath)) return null;
-  return parsePost(filePath);
+  for (const dir of getCandidateDirectories()) {
+    const filePath = path.join(dir, `${slug}.md`);
+    if (fs.existsSync(filePath)) {
+      return parsePost(filePath);
+    }
+  }
+
+  return null;
 }
 
 export function getAllPostSlugs(): string[] {

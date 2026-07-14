@@ -32,20 +32,20 @@ Our team combines deep technical expertise with practical business understanding
 
 Our core services cover the full spectrum of AI-powered business solutions:
 
-- **AI Agent Development** — Custom multi-agent systems built with LangChain, LangGraph, and OpenAI APIs that handle complex business workflows autonomously.
-- **Workflow Automation** — Event-driven n8n and Make.com integrations that connect your CRM, Slack, email, and databases without manual data entry.
-- **Vibe Coding** — Rapid website and SaaS MVP development using AI-paired workflows. What used to take quarters now takes weeks.
-- **Cybersecurity Monitoring** — Automated threat detection pipelines using VirusTotal, URLScan, and Groq for real-time alerting.
+- **AI Agent Development** - Custom multi-agent systems built with LangChain, LangGraph, and OpenAI APIs that handle complex business workflows autonomously.
+- **Workflow Automation** - Event-driven n8n and Make.com integrations that connect your CRM, Slack, email, and databases without manual data entry.
+- **Vibe Coding** - Rapid website and SaaS MVP development using AI-paired workflows. What used to take quarters now takes weeks.
+- **Cybersecurity Monitoring** - Automated threat detection pipelines using VirusTotal, URLScan, and Groq for real-time alerting.
 
 ## Our Approach
 
 We follow a straightforward process for every engagement:
 
-1. **Discovery** — Understanding your business process and pain points.
-2. **Architecture** — Designing modular, agent-based systems that scale.
-3. **Build** — Rapid prototyping and iteration with AI-assisted development.
-4. **Deploy** — Production-grade deployments on Vercel, Railway, or your preferred infrastructure.
-5. **Support** — Ongoing monitoring and optimization.
+1. **Discovery** - Understanding your business process and pain points.
+2. **Architecture** - Designing modular, agent-based systems that scale.
+3. **Build** - Rapid prototyping and iteration with AI-assisted development.
+4. **Deploy** - Production-grade deployments on Vercel, Railway, or your preferred infrastructure.
+5. **Support** - Ongoing monitoring and optimization.
 
 ## Why Multi-Agent Systems?
 
