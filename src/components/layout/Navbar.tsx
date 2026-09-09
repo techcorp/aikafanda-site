@@ -11,6 +11,9 @@ export default function Navbar() {
   const [open, setOpen] = useState(false);
   const pathname = usePathname();
 
+  // Standalone Ruya AI account-action page — no agency site chrome.
+  if (pathname?.startsWith("/reset-password")) return null;
+
   const links = [
     { id: "home", label: "Home", href: "/" },
     { id: "services", label: "Services", href: "/services" },

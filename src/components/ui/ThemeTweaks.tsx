@@ -1,6 +1,7 @@
 "use client";
 
 import React, { useState, useEffect, useRef } from "react";
+import { usePathname } from "next/navigation";
 
 const PALETTES = [
   { id: "violet-cyan", label: "Violet & Cyan", colors: ["#8B5CF6", "#22D3EE", "#E879F9"] },
@@ -10,6 +11,7 @@ const PALETTES = [
 ];
 
 export default function ThemeTweaks() {
+  const pathname = usePathname();
   const [isOpen, setIsOpen] = useState(false);
   const [palette, setPalette] = useState("violet-cyan");
   const [density, setDensity] = useState("default");
@@ -62,6 +64,8 @@ export default function ThemeTweaks() {
     document.addEventListener("mousedown", handleOutsideClick);
     return () => document.removeEventListener("mousedown", handleOutsideClick);
   }, [isOpen]);
+
+  if (pathname?.startsWith("/reset-password")) return null;
 
   return (
     <div style={{ position: "fixed", bottom: "96px", right: "24px", zIndex: 100 }}>

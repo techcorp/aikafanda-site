@@ -1,11 +1,18 @@
+"use client";
+
 import React from "react";
 import Link from "next/link";
 import Image from "next/image";
+import { usePathname } from "next/navigation";
 import Icon from "./Icon";
 import { createWhatsAppLink } from "@/lib/data";
 
 export default function Footer() {
+  const pathname = usePathname();
   const waLink = createWhatsAppLink("Hi, I'd like to discuss AI automation solutions for my business.");
+
+  // Standalone Ruya AI account-action page — no agency site chrome.
+  if (pathname?.startsWith("/reset-password")) return null;
 
   return (
     <footer className="footer">

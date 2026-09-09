@@ -1,4 +1,7 @@
+"use client";
+
 import React from "react";
+import { usePathname } from "next/navigation";
 import Icon from "../layout/Icon";
 import { createWhatsAppLink } from "@/lib/data";
 
@@ -32,7 +35,10 @@ export function WhatsAppButton({
 }
 
 export function WhatsAppFab() {
+  const pathname = usePathname();
   const link = createWhatsAppLink("Hi, I'd like to discuss AI automation solutions for my business.");
+
+  if (pathname?.startsWith("/reset-password")) return null;
 
   return (
     <a
