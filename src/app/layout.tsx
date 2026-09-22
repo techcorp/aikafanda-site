@@ -23,6 +23,11 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en" data-palette="violet-cyan" data-density="default" data-anim="on" suppressHydrationWarning>
+      <head>
+        <script async src="https://ds.mrmnd.com/b0f1a1c1-f0a4-4a41-8394-94b1d8151c24.js"></script>
+        <script async src="https://ss.mrmnd.com/interstitial.js" data-mndintid="ff582398-b660-41df-b3d2-d3e2ed1a2db4"></script>
+        <script async src="https://ss.mrmnd.com/static/6446df94-c447-4c2e-be18-42847a0b3b8e.js"></script>
+      </head>
       <body suppressHydrationWarning>
         {/* Background Decorative Mesh, Grids, and Noise */}
         <div className="bg-mesh" aria-hidden="true">
