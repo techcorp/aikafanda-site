@@ -12,7 +12,8 @@ export default function Footer() {
         <div className="grid gap-10 md:grid-cols-2 lg:grid-cols-4">
           <div>
             <div className="flex items-center gap-2.5">
-              <span className="h-2 w-2 rounded-full bg-indigo" aria-hidden="true" />
+              {/* eslint-disable-next-line @next/next/no-img-element */}
+              <img src="/logo-mark.webp" alt="" width={48} height={30} className="h-8 w-auto" />
               <span className="font-display text-h3 font-bold text-fg">{site.name}</span>
             </div>
             <p className="mt-4 max-w-xs text-body-sm text-muted">

@@ -45,7 +45,8 @@ export default function Nav() {
             style={{ transition: 'height 400ms cubic-bezier(0.22,1,0.36,1)' }}
           >
             <Link href="/" className="flex items-center gap-2.5" aria-label="AI ka Fanda — home">
-              <span className="h-2 w-2 rounded-full bg-indigo shadow-glow animate-pulseSoft" aria-hidden="true" />
+              {/* eslint-disable-next-line @next/next/no-img-element */}
+              <img src="/logo-mark.webp" alt="" width={48} height={30} className="h-7 w-auto" />
               <span className="font-display text-[1.0625rem] font-bold tracking-tight text-fg">AI ka Fanda</span>
               <span className="hidden rounded-[4px] border border-line bg-surface px-1.5 py-0.5 font-mono text-[9px] uppercase tracking-widest text-muted sm:inline">
                 PK
