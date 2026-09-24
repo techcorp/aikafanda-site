@@ -54,13 +54,13 @@ function ServiceCarousel({ items }) {
             key={item.slug}
             data-slide
             aria-label={`${index + 1} of ${count}: ${item.title}`}
-            className={`card flex w-[86%] shrink-0 snap-start flex-col overflow-hidden transition-[opacity,transform] duration-500 sm:w-[60%] md:w-[46%] ${
+            className={`card flex w-[86%] shrink-0 snap-start flex-col overflow-hidden transition-[opacity,transform] duration-700 ease-[cubic-bezier(0.22,1,0.36,1)] will-change-transform sm:w-[60%] md:w-[46%] ${
               index === active ? 'opacity-100' : 'scale-[0.96] opacity-60'
             }`}
           >
             <div className="relative aspect-[16/9] bg-void" style={{ backgroundImage: `radial-gradient(60% 70% at 50% 55%, ${item.accent}33, transparent 70%)` }}>
               {/* eslint-disable-next-line @next/next/no-img-element */}
-              <img src={item.image} alt="" loading="lazy" draggable={false} className="h-full w-full object-contain p-3 transition-transform duration-700 hover:scale-105" />
+              <img src={item.image} alt="" loading="lazy" draggable={false} className="h-full w-full object-contain p-3 transition-transform duration-1000 ease-[cubic-bezier(0.22,1,0.36,1)] hover:scale-105" />
               <span className="pointer-events-none absolute inset-0" style={{ boxShadow: `inset 0 -50px 60px -30px ${item.accent}40` }} aria-hidden="true" />
             </div>
             <div className="flex flex-1 flex-col p-5">
@@ -104,7 +104,7 @@ function ServiceCarousel({ items }) {
               className="group grid h-11 min-w-[2.25rem] place-items-center px-1"
             >
               <span
-                className={`block h-1.5 rounded-full transition-all duration-500 ${
+                className={`block h-1.5 rounded-full transition-all duration-700 ease-[cubic-bezier(0.22,1,0.36,1)] ${
                   i === active ? 'w-7 bg-indigo' : 'w-1.5 bg-line group-hover:bg-muted'
                 }`}
               />
@@ -119,6 +119,14 @@ function ServiceCarousel({ items }) {
   )
 }
 
+/** Eases each hand-off between cards so they dwell at rest instead of sliding linearly. */
+function settle(value) {
+  const base = Math.floor(value)
+  const t = value - base
+  const smooth = t * t * t * (t * (t * 6 - 15) + 10)
+  return base + t * 0.25 + smooth * 0.75
+}
+
 /** Shared pinned depth showcase: renderers vary, scroll maths stays here. */
 export default function ScrollShowcase({ items, variant = 'apps' }) {
   const sectionRef = useRef(null)
@@ -126,9 +134,8 @@ export default function ScrollShowcase({ items, variant = 'apps' }) {
   const [enabled, setEnabled] = useState(null)
   const isServices = variant === 'services'
   const count = items.length
-  const position = progress * (count - 1)
-  // Bias the label toward the incoming card so it matches the visual hand-off.
-  const active = Math.max(0, Math.min(count - 1, Math.round(position + 0.2)))
+  const position = settle(progress * (count - 1))
+  const active = Math.max(0, Math.min(count - 1, Math.round(position)))
   const current = items[active]
 
   useEffect(() => {
@@ -148,19 +155,30 @@ export default function ScrollShowcase({ items, variant = 'apps' }) {
 
   useEffect(() => {
     if (enabled !== true) return undefined
+    // Scroll sets a target; a rAF loop glides toward it so wheel steps never jump.
     let frame = null
-    const read = () => {
-      frame = null
+    let target = 0
+    let shown = null
+    const measure = () => {
       const element = sectionRef.current
       if (!element) return
       const rect = element.getBoundingClientRect()
       const scrollable = rect.height - window.innerHeight
-      if (scrollable > 0) setProgress(Math.min(1, Math.max(0, -rect.top / scrollable)))
+      if (scrollable > 0) target = Math.min(1, Math.max(0, -rect.top / scrollable))
+    }
+    const tick = () => {
+      frame = null
+      measure()
+      if (shown === null) shown = target
+      shown += (target - shown) * 0.14
+      if (Math.abs(target - shown) < 0.0005) shown = target
+      setProgress(shown)
+      if (shown !== target) frame = requestAnimationFrame(tick)
     }
     const requestRead = () => {
-      if (frame === null) frame = requestAnimationFrame(read)
+      if (frame === null) frame = requestAnimationFrame(tick)
     }
-    read()
+    tick()
     window.addEventListener('scroll', requestRead, { passive: true })
     window.addEventListener('resize', requestRead)
     return () => {
@@ -228,14 +246,13 @@ export default function ScrollShowcase({ items, variant = 'apps' }) {
         <div className="shell grid w-full items-center gap-12 lg:grid-cols-[1.15fr_0.85fr]">
           <div className="relative mx-auto aspect-[16/10] w-full max-w-[720px]" style={{ perspective: '1400px', perspectiveOrigin: '50% 45%', transformStyle: 'preserve-3d' }}>
             {items.map((item, index) => {
-              const offset = index - progress * (count - 1)
+              const offset = index - position
               const passed = offset < 0
-              const z = passed ? -offset * 520 : -offset * 300
-              const y = passed ? offset * 90 : offset * 26
-              const scale = passed ? 1 + -offset * 0.12 : 1 - offset * 0.02
-              const rotateX = Math.max(-10, Math.min(8, offset * 3.2))
-              const opacity = passed ? Math.max(0, 1 + offset / 0.5) : Math.max(0, 1 - offset * 0.45)
-              const blur = passed ? Math.min(8, -offset * 14) : offset > 0.5 ? Math.min(5, (offset - 0.5) * 3.4) : 0
+              const z = passed ? -offset * 420 : -offset * 260
+              const y = passed ? offset * 70 : offset * 30
+              const scale = passed ? 1 + -offset * 0.08 : 1 - offset * 0.04
+              const rotateX = Math.max(-8, Math.min(6, offset * 2.4))
+              const opacity = passed ? Math.max(0, 1 + offset / 0.6) : Math.max(0, 1 - offset * 0.4)
               return (
                 <div
                   key={item.slug}
@@ -245,7 +262,6 @@ export default function ScrollShowcase({ items, variant = 'apps' }) {
                   style={{
                     transform: `translate3d(0, ${y}px, ${z}px) rotateX(${rotateX}deg) scale(${scale})`,
                     opacity,
-                    filter: blur ? `blur(${blur}px)` : 'none',
                     zIndex: Math.round(500 - offset * 40),
                     pointerEvents: index === active ? 'auto' : 'none',
                     willChange: 'transform, opacity',
@@ -268,12 +284,12 @@ export default function ScrollShowcase({ items, variant = 'apps' }) {
                 </div>
               )
             })}
-            <div className="pointer-events-none absolute -bottom-16 left-1/2 h-40 w-3/4 rounded-full blur-[70px] -translate-x-1/2" style={{ background: `${current.accent}35`, transition: 'background 700ms ease' }} aria-hidden="true" />
+            <div className="pointer-events-none absolute -bottom-16 left-1/2 h-40 w-3/4 rounded-full blur-[70px] -translate-x-1/2" style={{ background: `${current.accent}35`, transition: 'background 900ms cubic-bezier(0.22,1,0.36,1)' }} aria-hidden="true" />
           </div>
 
           <div className="relative" data-showcase-label={current.slug}>
             <Kicker>{String(active + 1).padStart(2, '0')} / {String(count).padStart(2, '0')}</Kicker>
-            <div key={current.slug} className="mt-5 animate-[fadeUp_500ms_cubic-bezier(0.22,1,0.36,1)_both]">
+            <div key={current.slug} className="mt-5 animate-[fadeUp_700ms_cubic-bezier(0.22,1,0.36,1)_both]">
               {isServices ? (
                 <>
                   <div className="flex items-center gap-3">
@@ -306,9 +322,8 @@ export default function ScrollShowcase({ items, variant = 'apps' }) {
               )}
             </div>
             <div className="mt-10 flex items-center gap-2" aria-hidden="true">
-              {items.map((item, index) => <span key={item.slug} className="h-0.5 flex-1 overflow-hidden rounded-full bg-line"><span className="block h-full rounded-full bg-indigo" style={{ width: index <= active ? '100%' : '0%', transition: 'width 500ms cubic-bezier(0.22,1,0.36,1)' }} /></span>)}
+              {items.map((item, index) => <span key={item.slug} className="h-0.5 flex-1 overflow-hidden rounded-full bg-line"><span className="block h-full rounded-full bg-indigo" style={{ width: index <= active ? '100%' : '0%', transition: 'width 700ms cubic-bezier(0.22,1,0.36,1)' }} /></span>)}
             </div>
-            <p className="mt-3 font-mono text-kicker uppercase text-muted">Keep scrolling to advance</p>
           </div>
         </div>
       </div>

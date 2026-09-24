@@ -2,7 +2,6 @@
 
 import Link from 'next/link'
 import { MaskedLines } from './Motion'
-import { Kicker } from './UI'
 
 const terminalLines = [
   { t: 'import { Studio } from "@aikafanda/core";', c: 'text-indigo-soft' },
@@ -29,9 +28,7 @@ export default function Hero() {
         <div className="grid grid-cols-1 items-center gap-14 lg:grid-cols-[1.05fr_0.95fr]">
           {/* copy */}
           <div className="min-w-0">
-            <Kicker>Vibe coding studio · PK</Kicker>
-
-            <h1 className="mt-6 font-display text-hero text-fg">
+            <h1 className="font-display text-hero text-fg">
               <MaskedLines
                 lines={['We build with AI.', 'You ship in days,', 'not months.']}
                 lineClassName=""
@@ -51,10 +48,6 @@ export default function Hero() {
                 Book a free call
               </Link>
             </div>
-
-            <p className="mt-7 font-mono text-kicker uppercase text-muted">
-              <span className="text-amber">Apps shipped</span> · Deployed to Play Store &amp; Edge
-            </p>
           </div>
 
           {/* terminal + app card composition */}

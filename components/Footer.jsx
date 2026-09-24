@@ -20,10 +20,6 @@ export default function Footer() {
               High velocity, vibe-coded product engineering from Okara, Pakistan. Turning ambitious
               concepts into deployed software at unreal speeds.
             </p>
-            <p className="mt-5 inline-flex items-center gap-2 font-mono text-kicker uppercase text-muted">
-              <span className="h-1.5 w-1.5 rounded-full bg-emerald-400 animate-pulseSoft" aria-hidden="true" />
-              All agent clusters operational
-            </p>
           </div>
 
           <div>
@@ -121,7 +117,6 @@ export default function Footer() {
               Terms
             </Link>
           </div>
-          <p className="font-mono text-kicker uppercase text-muted">Lahore · Islamabad · Karachi · v0.2.0</p>
         </div>
       </div>
     </footer>

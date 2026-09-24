@@ -48,9 +48,6 @@ export default function Nav() {
               {/* eslint-disable-next-line @next/next/no-img-element */}
               <img src="/logo-mark.webp" alt="" width={48} height={30} className="h-7 w-auto" />
               <span className="font-display text-[1.0625rem] font-bold tracking-tight text-fg">AI ka Fanda</span>
-              <span className="hidden rounded-[4px] border border-line bg-surface px-1.5 py-0.5 font-mono text-[9px] uppercase tracking-widest text-muted sm:inline">
-                PK
-              </span>
             </Link>
 
             <nav
