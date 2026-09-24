@@ -32,8 +32,8 @@ export async function POST(request) {
     return NextResponse.json({ error: 'That email address does not look right.' }, { status: 400 })
   }
 
-  const to = process.env.CONTACT_TO_EMAIL || 'technicalcorp700@gmail.com'
-  const from = process.env.CONTACT_FROM_EMAIL || 'onboarding@resend.dev'
+  const to = process.env.CONTACT_TO_EMAIL || 'support@aikafanda.com'
+  const from = process.env.CONTACT_FROM_EMAIL || 'support@aikafanda.com'
   const key = process.env.RESEND_API_KEY
 
   // No mail provider configured: log it so nothing is silently lost.

@@ -7,7 +7,7 @@ export const site = {
   description:
     'An AI-first studio building production apps, websites, automations and chatbots — designed and coded with AI, shipped in days.',
   url: process.env.NEXT_PUBLIC_SITE_URL || 'https://www.aikafanda.com',
-  email: 'technicalcorp700@gmail.com',
+  email: 'support@aikafanda.com',
   founder: 'Hafiz Muhammad Anas',
   location: 'Okara, Punjab, Pakistan',
   playDeveloperUrl: 'https://play.google.com/store/apps/developer?id=AI+Ka+Fanda',

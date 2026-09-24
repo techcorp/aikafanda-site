@@ -176,12 +176,12 @@ export function CTABand({
               <Link href="/contact" className="btn-signal w-full sm:w-auto">
                 Start a project
               </Link>
-              <a href={`mailto:${'technicalcorp700@gmail.com'}`} className="btn-ghost w-full sm:w-auto">
+              <a href={`mailto:${'support@aikafanda.com'}`} className="btn-ghost w-full sm:w-auto">
                 Email us directly
               </a>
             </div>
             <p className="mt-6 break-words font-mono text-kicker uppercase text-muted">
-              Or reach founders directly at technicalcorp700@gmail.com
+              Or reach founders directly at support@aikafanda.com
             </p>
           </div>
         </div>
