@@ -5,6 +5,7 @@ import Footer from '@/components/Footer'
 import SmoothScroll from '@/components/SmoothScroll'
 import Cursor from '@/components/Cursor'
 import GravityStarsBackground from '@/components/GravityStars'
+import AdblockWall from '@/components/AdblockWall'
 import { site } from '@/data/site'
 
 const display = Space_Grotesk({ subsets: ['latin'], weight: ['500', '600', '700'], variable: '--font-display', display: 'swap' })
@@ -103,6 +104,7 @@ export default function RootLayout({ children }) {
         <Nav />
         <main id="main">{children}</main>
         <Footer />
+        <AdblockWall />
       </body>
     </html>
   )

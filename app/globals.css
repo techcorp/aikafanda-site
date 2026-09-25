@@ -1541,3 +1541,37 @@ html.cursor-on .cursor-ring[data-state='label'] ~ .cursor-dot,
 html.cursor-on .cursor-ring[data-state='text'] ~ .cursor-dot {
   opacity: 0;
 }
+
+/* ad-block wall */
+html.adwall-on,
+html.adwall-on body {
+  overflow: hidden !important;
+}
+.adwall {
+  animation: adwall-fade 0.4s ease both;
+}
+.adwall-card {
+  animation: adwall-pop 0.6s cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+.adwall-icon {
+  animation: adwall-float 3.2s ease-in-out infinite;
+  filter: drop-shadow(0 10px 30px rgba(139, 124, 246, 0.45));
+}
+.adwall-steps li {
+  animation: adwall-rise 0.45s cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+@keyframes adwall-fade {
+  from { opacity: 0; }
+}
+@keyframes adwall-pop {
+  from { opacity: 0; transform: translateY(24px) scale(0.94); }
+}
+@keyframes adwall-float {
+  50% { transform: translateY(-6px) rotate(-3deg); }
+}
+@keyframes adwall-rise {
+  from { opacity: 0; transform: translateY(8px); }
+}
+@media (prefers-reduced-motion: reduce) {
+  .adwall, .adwall-card, .adwall-icon, .adwall-steps li { animation: none; }
+}

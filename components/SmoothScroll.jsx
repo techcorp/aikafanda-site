@@ -18,6 +18,8 @@ export default function SmoothScroll() {
     ;(async () => {
       const { default: Lenis } = await import('lenis')
       lenis = new Lenis({ duration: 1.1, easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)) })
+      // exposed so overlays (e.g. the ad-block wall) can pause scrolling
+      window.__lenis = lenis
       const raf = (time) => {
         lenis.raf(time)
         frame = requestAnimationFrame(raf)
@@ -28,6 +30,7 @@ export default function SmoothScroll() {
     return () => {
       cancelAnimationFrame(frame)
       lenis?.destroy()
+      if (window.__lenis === lenis) delete window.__lenis
     }
   }, [])
 
