@@ -46,7 +46,7 @@ export const apps = [
     short: 'FinSnap Ai',
     category: 'Finance',
     status: 'live',
-    packageId: '',
+    packageId: 'com.technicalcorp.finsnapai',
     tagline: 'Scan any receipt and let AI track, categorise and summarise your spending automatically.',
     description:
       'Point the camera at a receipt and FinSnap extracts line items with OCR, classifies each one, and rolls everything into a live balance with category breakdowns and weekly insights.',
@@ -69,7 +69,7 @@ export const apps = [
     short: 'Ruya AI',
     category: 'Islamic',
     status: 'live',
-    packageId: '',
+    packageId: 'com.technicalcorp.khwaabkitabeer',
     tagline: 'AI dream interpretation inspired by Ibn Sirin, in Urdu, Roman Urdu and English.',
     description:
       'Describe a dream in your own words and Ruya AI returns an interpretation grounded in classical Islamic dream literature, with the symbolism explained rather than just asserted.',
@@ -115,7 +115,7 @@ export const apps = [
     short: 'Paisaly',
     category: 'Finance',
     status: 'live',
-    packageId: '',
+    packageId: 'com.paisaly.app',
     tagline: 'Complete tasks, refer friends and withdraw earnings to EasyPaisa or JazzCash.',
     description:
       'A rewards app built for Pakistan: finish short tasks, build a referral tree, and cash out straight into EasyPaisa or JazzCash with fast, verified withdrawals.',
