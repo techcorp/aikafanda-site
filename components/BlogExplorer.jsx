@@ -12,7 +12,7 @@ const PAGE = 9
 function PostCard({ post, delay = 0 }) {
   return (
     <Reveal delay={delay} className="h-full">
-      <Link href={`/blog/${post.slug}`} className="card card-hover group flex h-full flex-col overflow-hidden">
+      <Link href={`/blog/${post.slug}`} data-cursor="Read" className="card card-hover group flex h-full flex-col overflow-hidden">
         <div className="relative aspect-[16/9] overflow-hidden bg-surface-2">
           {post.image ? (
             // eslint-disable-next-line @next/next/no-img-element
@@ -48,7 +48,7 @@ function PostCard({ post, delay = 0 }) {
 function Featured({ post }) {
   return (
     <Reveal>
-      <Link href={`/blog/${post.slug}`} className="card card-hover group grid overflow-hidden md:grid-cols-2">
+      <Link href={`/blog/${post.slug}`} data-cursor="Read" className="card card-hover group grid overflow-hidden md:grid-cols-2">
         <div className="aspect-[16/10] overflow-hidden bg-surface-2 md:aspect-auto md:h-full">
           {post.image ? (
             // eslint-disable-next-line @next/next/no-img-element

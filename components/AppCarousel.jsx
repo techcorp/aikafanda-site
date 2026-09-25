@@ -204,6 +204,7 @@ export default function AppCarousel({ apps }) {
         role="group"
         aria-roledescription="carousel"
         aria-label="Our apps"
+        data-cursor="Drag"
         className="relative h-[300px] cursor-grab select-none outline-none active:cursor-grabbing sm:h-[340px]"
         style={{ perspective: '1500px' }}
         onKeyDown={onKeyDown}

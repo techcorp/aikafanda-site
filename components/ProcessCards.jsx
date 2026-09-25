@@ -128,6 +128,7 @@ function Carousel({ steps }) {
           onPointerUp={onPointerUp}
           onPointerCancel={onPointerUp}
           onDragStart={(e) => e.preventDefault()}
+          data-cursor="Drag"
           className={`relative h-[24rem] select-none overflow-hidden outline-none [perspective:1100px] [touch-action:pan-y] ${
             dragging ? 'cursor-grabbing' : 'cursor-grab'
           }`}

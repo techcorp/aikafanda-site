@@ -1451,3 +1451,93 @@
     background: #ffbd58;
   }
 }
+
+/* ---- Custom cursor (components/Cursor.jsx) -------------------------------- */
+html.has-cursor.cursor-on,
+html.has-cursor.cursor-on * {
+  cursor: none !important;
+}
+.cursor-dot,
+.cursor-ring {
+  position: fixed;
+  left: 0;
+  top: 0;
+  z-index: 9999;
+  pointer-events: none;
+  opacity: 0;
+  transition: opacity 0.3s ease;
+  will-change: transform;
+}
+html.cursor-on .cursor-dot,
+html.cursor-on .cursor-ring {
+  opacity: 1;
+}
+.cursor-dot {
+  width: 6px;
+  height: 6px;
+  margin: -3px 0 0 -3px;
+  border-radius: 9999px;
+  background: #ffb020;
+  box-shadow: 0 0 10px 2px rgba(255, 176, 32, 0.55);
+}
+.cursor-ring-shape {
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 34px;
+  height: 34px;
+  border-radius: 9999px;
+  border: 1.5px solid rgba(198, 191, 255, 0.55);
+  background: rgba(108, 92, 231, 0);
+  transform: translate(-50%, -50%) scale(1);
+  transition: width 0.35s cubic-bezier(0.22, 1, 0.36, 1), height 0.35s cubic-bezier(0.22, 1, 0.36, 1),
+    border-radius 0.35s cubic-bezier(0.22, 1, 0.36, 1), background-color 0.3s ease, border-color 0.3s ease,
+    transform 0.2s ease;
+}
+.cursor-ring[data-state='hover'] .cursor-ring-shape {
+  width: 58px;
+  height: 58px;
+  border-color: rgba(125, 111, 240, 0.9);
+  background: rgba(108, 92, 231, 0.14);
+  box-shadow: 0 0 24px rgba(108, 92, 231, 0.35);
+}
+.cursor-ring[data-state='label'] .cursor-ring-shape {
+  width: 78px;
+  height: 78px;
+  border-color: transparent;
+  background: rgba(108, 92, 231, 0.92);
+  box-shadow: 0 0 34px rgba(108, 92, 231, 0.55);
+}
+.cursor-ring[data-state='text'] .cursor-ring-shape {
+  width: 3px;
+  height: 26px;
+  border-radius: 2px;
+  border-color: transparent;
+  background: #c6bfff;
+}
+.cursor-ring.is-down .cursor-ring-shape {
+  transform: translate(-50%, -50%) scale(0.8);
+}
+.cursor-label {
+  position: absolute;
+  left: 0;
+  top: 0;
+  transform: translate(-50%, -50%) scale(0.6);
+  opacity: 0;
+  font-family: var(--font-mono), monospace;
+  font-size: 11px;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: #fff;
+  white-space: nowrap;
+  transition: opacity 0.25s ease, transform 0.35s cubic-bezier(0.22, 1, 0.36, 1);
+}
+.cursor-ring[data-state='label'] .cursor-label {
+  opacity: 1;
+  transform: translate(-50%, -50%) scale(1);
+}
+/* the dot tucks away while the ring is doing the talking */
+html.cursor-on .cursor-ring[data-state='label'] ~ .cursor-dot,
+html.cursor-on .cursor-ring[data-state='text'] ~ .cursor-dot {
+  opacity: 0;
+}

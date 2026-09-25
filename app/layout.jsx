@@ -3,6 +3,7 @@ import { Inter, Space_Grotesk, JetBrains_Mono } from 'next/font/google'
 import Nav from '@/components/Nav'
 import Footer from '@/components/Footer'
 import SmoothScroll from '@/components/SmoothScroll'
+import Cursor from '@/components/Cursor'
 import GravityStarsBackground from '@/components/GravityStars'
 import { site } from '@/data/site'
 
@@ -98,6 +99,7 @@ export default function RootLayout({ children }) {
           Skip to content
         </a>
         <SmoothScroll />
+        <Cursor />
         <Nav />
         <main id="main">{children}</main>
         <Footer />
