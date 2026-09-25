@@ -195,7 +195,13 @@ function InfoTile({ icon, label, accent, body, delay }) {
 /* ---------------------------------------------------------- ContactForm -- */
 
 const serviceOptions = ['Website', 'Automation', 'Chatbot', 'Mobile app', 'Something else']
-const budgetOptions = ['Under $500', '$500 – $2,000', '$2,000 – $5,000', '$5,000+', 'Not sure yet']
+// Mid-range brackets; PKR figures track USD at roughly Rs 280 = $1.
+const budgetRanges = {
+  USD: ['Under $300', '$300 – $1,000', '$1,000 – $2,500', '$2,500+'],
+  PKR: ['Under Rs 80k', 'Rs 80k – 3 Lac', 'Rs 3 – 7 Lac', 'Rs 7 Lac+'],
+}
+const NOT_SURE = 'Not sure yet'
+const CUSTOM = 'Custom amount'
 
 function Label({ children, required }) {
   return (
@@ -229,7 +235,9 @@ export function ContactFormFx() {
   const [state, setState] = useState('idle') // idle | sending | sent | error
   const [message, setMessage] = useState('')
   const [service, setService] = useState(serviceOptions[0])
-  const [budget, setBudget] = useState(budgetOptions[1])
+  const [currency, setCurrency] = useState('PKR')
+  const [budget, setBudget] = useState(budgetRanges.PKR[1])
+  const [customBudget, setCustomBudget] = useState('')
   const [vals, setVals] = useState({ name: '', email: '', message: '' })
   const formRef = useRef(null)
   const wrap = useRef(null)
@@ -239,9 +247,27 @@ export function ContactFormFx() {
   const done = [vals.name.trim(), /\S+@\S+\.\S+/.test(vals.email), vals.message.trim().length > 9].filter(Boolean).length
   const progress = Math.round((done / 3) * 100)
 
+  const budgetOptions = [...budgetRanges[currency], NOT_SURE, CUSTOM]
+  const budgetValue =
+    budget === CUSTOM
+      ? customBudget.trim()
+        ? `${currency} ${customBudget.trim()} (custom)`
+        : `Custom (${currency}, amount not given)`
+      : budget
+
+  // Switching currency keeps the same bracket position.
+  function pickCurrency(c) {
+    if (c === currency) return
+    const i = budgetRanges[currency].indexOf(budget)
+    if (i !== -1) setBudget(budgetRanges[c][i])
+    setCurrency(c)
+  }
+
   async function onSubmit(e) {
     e.preventDefault()
     const data = Object.fromEntries(new FormData(formRef.current))
+    data.budget = budgetValue
+    delete data.customBudget
 
     if (!data.name?.trim() || !data.email?.trim() || !data.message?.trim()) {
       setState('error')
@@ -342,8 +368,40 @@ export function ContactFormFx() {
             </div>
 
             <div className="ct-f mt-6" style={{ '--d': '340ms' }}>
-              <Label>Budget</Label>
-              <Pills name="budget" options={budgetOptions} value={budget} onChange={setBudget} tone="amber" />
+              <div className="flex items-center justify-between gap-3">
+                <Label>Budget</Label>
+                <div className="mb-2 flex rounded-full border border-line bg-void/40 p-0.5" role="radiogroup" aria-label="Currency">
+                  {['PKR', 'USD'].map((c) => (
+                    <button
+                      key={c}
+                      type="button"
+                      role="radio"
+                      aria-checked={currency === c}
+                      onClick={() => pickCurrency(c)}
+                      className={`rounded-full px-3 py-1 font-mono text-[11px] transition-all duration-300 ${
+                        currency === c ? 'bg-amber text-void shadow-[0_0_14px_rgba(255,176,32,0.35)]' : 'text-muted hover:text-fg'
+                      }`}
+                    >
+                      {c}
+                    </button>
+                  ))}
+                </div>
+              </div>
+              <Pills name="budgetChoice" options={budgetOptions} value={budget} onChange={setBudget} tone="amber" />
+              {budget === CUSTOM && (
+                <div className="ct-custom mt-3 flex items-center overflow-hidden rounded-lg border border-amber/40 bg-void/40 focus-within:border-amber">
+                  <span className="border-r border-line px-3.5 py-3 font-mono text-[12px] text-amber">{currency === 'PKR' ? 'Rs' : '$'}</span>
+                  <input
+                    name="customBudget"
+                    value={customBudget}
+                    onChange={(e) => setCustomBudget(e.target.value)}
+                    maxLength={40}
+                    autoFocus
+                    placeholder={currency === 'PKR' ? 'e.g. 1,50,000' : 'e.g. 750'}
+                    className="w-full bg-transparent px-3.5 py-3 text-body-sm text-fg outline-none placeholder:text-muted/60"
+                  />
+                </div>
+              )}
             </div>
 
             <label className="ct-f mt-6 block" style={{ '--d': '420ms' }}>

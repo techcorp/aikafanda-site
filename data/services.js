@@ -69,36 +69,25 @@ export const services = [
   },
 ]
 
-export const engagements = [
-  {
-    name: 'Quick Build',
-    price: 'From $450',
-    blurb: 'One focused deliverable, shipped fast.',
-    features: ['Landing page or single-flow tool', 'Up to 5 sections or screens', 'Delivered in 3–7 days', 'One revision round'],
-    cta: 'Start a quick build',
-    popular: false,
-  },
-  {
-    name: 'Full Project',
-    price: 'From $1,800',
-    blurb: 'A complete product, designed and launched.',
-    features: [
-      'Full web app or Android app',
-      'Design system, backend and integrations',
-      'Store or production launch included',
-      '30 days of post-launch support',
-    ],
-    cta: 'Scope a project',
-    popular: true,
-  },
-  {
-    name: 'Retainer',
-    price: 'From $900/mo',
-    blurb: 'An embedded AI team, month to month.',
-    features: ['Ongoing features and fixes', 'Priority response within 24 hours', 'Monthly roadmap call', 'Pause or cancel any month'],
-    cta: 'Talk about a retainer',
-    popular: false,
-  },
+// No public price list — every quote is scoped on a call. These explain how.
+export const pricingFactors = [
+  { icon: 'scope', title: 'Scope', body: 'How many screens, pages or flows, and how much is custom versus proven building blocks.' },
+  { icon: 'plug', title: 'Integrations', body: 'Payments, logins, APIs, dashboards. Every moving part is listed in the quote.' },
+  { icon: 'clock', title: 'Timeline', body: 'A normal pace costs less than a rush. Tell us the real deadline and we plan around it.' },
+  { icon: 'shield', title: 'Support', body: 'One-off delivery, 30 days of fixes, or an ongoing monthly retainer. You choose.' },
+]
+
+export const quoteSteps = [
+  { title: 'Share the idea', body: 'Send the form or a WhatsApp message. A few lines are enough.' },
+  { title: '20-minute call', body: 'We ask the right questions and suggest the leanest version that works.' },
+  { title: 'Fixed written quote', body: 'Within 24 hours: scope, timeline and price in PKR or USD. No surprises later.' },
+]
+
+export const pricingPromises = [
+  'Fixed quote before any work starts',
+  'Pay in PKR or USD',
+  'Milestone payments, not all upfront',
+  'We tell you if a smaller build will do',
 ]
 
 export const whyAi = [
