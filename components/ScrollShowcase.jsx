@@ -3,7 +3,7 @@
 import { useEffect, useRef, useState } from 'react'
 import Link from 'next/link'
 import { playUrl } from '@/data/apps'
-import { AppIcon, Arrow, Check, PlayGlyph, Kicker, ServiceIcon } from './UI'
+import { AppIcon, Arrow, Check, PlayGlyph, ServiceIcon } from './UI'
 
 /** Touch / narrow screens: swipeable snap carousel for services. */
 function ServiceCarousel({ items }) {
@@ -41,7 +41,7 @@ function ServiceCarousel({ items }) {
     'grid h-11 w-11 place-items-center rounded-full border border-line bg-surface/80 text-muted backdrop-blur transition-colors hover:border-muted hover:text-fg'
 
   return (
-    <div className="mx-auto max-w-shell py-12" data-showcase="services" data-showcase-mode="carousel">
+    <div className="mx-auto max-w-shell py-8" data-showcase="services" data-showcase-mode="carousel">
       <div
         ref={trackRef}
         role="region"
@@ -243,7 +243,7 @@ export default function ScrollShowcase({ items, variant = 'apps' }) {
   return (
     <div ref={sectionRef} style={{ height: `${pinnedHeight}vh` }} data-showcase={variant} data-showcase-mode="pinned">
       <div className="sticky top-0 flex h-screen items-center overflow-hidden">
-        <div className="shell grid w-full items-center gap-12 lg:grid-cols-[1.15fr_0.85fr]">
+        <div className={`shell grid w-full items-center gap-12 lg:grid-cols-[1.15fr_0.85fr] ${isServices ? 'lg:-translate-y-[6vh] 2xl:-translate-y-[8vh]' : ''}`}>
           <div className="relative mx-auto aspect-[16/10] w-full max-w-[720px]" style={{ perspective: '1400px', perspectiveOrigin: '50% 45%', transformStyle: 'preserve-3d' }}>
             {items.map((item, index) => {
               const offset = index - position
@@ -288,8 +288,7 @@ export default function ScrollShowcase({ items, variant = 'apps' }) {
           </div>
 
           <div className="relative" data-showcase-label={current.slug}>
-            <Kicker>{String(active + 1).padStart(2, '0')} / {String(count).padStart(2, '0')}</Kicker>
-            <div key={current.slug} className="mt-5 animate-[fadeUp_700ms_cubic-bezier(0.22,1,0.36,1)_both]">
+            <div key={current.slug} className="animate-[fadeUp_700ms_cubic-bezier(0.22,1,0.36,1)_both]">
               {isServices ? (
                 <>
                   <div className="flex items-center gap-3">
@@ -320,9 +319,6 @@ export default function ScrollShowcase({ items, variant = 'apps' }) {
                   </div>
                 </>
               )}
-            </div>
-            <div className="mt-10 flex items-center gap-2" aria-hidden="true">
-              {items.map((item, index) => <span key={item.slug} className="h-0.5 flex-1 overflow-hidden rounded-full bg-line"><span className="block h-full rounded-full bg-indigo" style={{ width: index <= active ? '100%' : '0%', transition: 'width 700ms cubic-bezier(0.22,1,0.36,1)' }} /></span>)}
             </div>
           </div>
         </div>

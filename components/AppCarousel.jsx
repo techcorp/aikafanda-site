@@ -35,14 +35,13 @@ export default function AppCarousel({ apps }) {
 
   const count = apps.length
   const step = 360 / count
-  const radius = 490
 
   const paintRotation = useCallback((transition = 'none') => {
     const el = ring.current
     if (!el) return
     el.style.transition = transition
-    el.style.transform = `translateZ(-${radius}px) rotateY(${-indexRef.current * step + motion.current.offset}deg)`
-  }, [radius, step])
+    el.style.transform = `translateZ(calc(var(--carousel-radius) * -1)) rotateY(${-indexRef.current * step + motion.current.offset}deg)`
+  }, [step])
 
   useEffect(() => {
     const check = () => setCompact(window.innerWidth < 768)
@@ -204,7 +203,7 @@ export default function AppCarousel({ apps }) {
         aria-roledescription="carousel"
         aria-label="Our apps"
         data-cursor="Drag"
-        className="relative h-[330px] cursor-grab select-none outline-none active:cursor-grabbing sm:h-[370px]"
+        className="relative h-[330px] cursor-grab select-none outline-none [--carousel-radius:490px] active:cursor-grabbing sm:h-[370px] xl:[--carousel-radius:570px] min-[1600px]:[--carousel-radius:620px]"
         style={{ perspective: '1500px' }}
         onKeyDown={onKeyDown}
         onPointerDown={onPointerDown}
@@ -217,7 +216,7 @@ export default function AppCarousel({ apps }) {
           <div
             ref={ring}
             className="absolute inset-0"
-            style={{ transformStyle: 'preserve-3d', transform: `translateZ(-${radius}px) rotateY(${-index * step}deg)` }}
+            style={{ transformStyle: 'preserve-3d', transform: `translateZ(calc(var(--carousel-radius) * -1)) rotateY(${-index * step}deg)` }}
           >
           {apps.map((app, i) => {
             // shortest angular distance from the front position
@@ -241,7 +240,7 @@ export default function AppCarousel({ apps }) {
                 aria-current={front}
                 className="absolute left-1/2 top-1/2 w-[340px] text-left sm:w-[420px]"
                 style={{
-                  transform: `translate(-50%, -50%) rotateY(${i * step}deg) translateZ(${radius}px)`,
+                  transform: `translate(-50%, -50%) rotateY(${i * step}deg) translateZ(var(--carousel-radius))`,
                   // Fully opaque at every angle; cards turned away are culled by
                   // backface-visibility, which stays correct mid-drag (index-based
                   // fades only update once the ring settles).

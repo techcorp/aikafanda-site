@@ -5,6 +5,7 @@ import { useEffect, useRef } from 'react'
 /*
  * Adapted from animate-ui's GravityStarsBackground (backgrounds/gravity-stars).
  * Same particle model (drift, mouse attract/repel, eased glow, optional bounce),
+ * rendered as tiny binary digits to match the AI/engineering theme.
  * reworked for a single fixed viewport layer:
  *  - pointer is tracked at window level, the layer never receives events
  *  - all state lives in refs; nothing re-renders after mount
@@ -30,23 +31,6 @@ function pickColor() {
     if (r <= 0) return i
   }
   return 0
-}
-
-function makeSprite(rgb, radius, dpr) {
-  const size = Math.ceil(radius * 2 * dpr)
-  const sprite = document.createElement('canvas')
-  sprite.width = size
-  sprite.height = size
-  const ctx = sprite.getContext('2d')
-  const c = size / 2
-  const g = ctx.createRadialGradient(c, c, 0, c, c, c)
-  g.addColorStop(0, `rgba(${rgb}, 0.9)`)
-  g.addColorStop(0.12, `rgba(${rgb}, 0.45)`)
-  g.addColorStop(0.4, `rgba(${rgb}, 0.1)`)
-  g.addColorStop(1, `rgba(${rgb}, 0)`)
-  ctx.fillStyle = g
-  ctx.fillRect(0, 0, size, size)
-  return sprite
 }
 
 export default function GravityStarsBackground({
@@ -77,13 +61,10 @@ export default function GravityStarsBackground({
     let dpr = 1
     let frame = 0
     let last = 0
-    let sprites = []
     let stars = []
     const trail = []
     let trailCarry = 0
     const mouse = { x: OFFSCREEN, y: OFFSCREEN }
-    const glowRadius = glowIntensity * 2
-
     const isReduced = () => reducedQuery.matches
     const isCoarse = () => coarseQuery.matches
 
@@ -103,6 +84,7 @@ export default function GravityStarsBackground({
           mass: Math.random() * 0.5 + 0.5,
           glow: 1,
           color: pickColor(),
+          bit: Math.random() < 0.5 ? '0' : '1',
         }
       })
     }
@@ -123,10 +105,7 @@ export default function GravityStarsBackground({
       height = nextH
       canvas.width = Math.max(1, Math.floor(width * nextDpr))
       canvas.height = Math.max(1, Math.floor(height * nextDpr))
-      if (nextDpr !== dpr || !sprites.length) {
-        dpr = nextDpr
-        sprites = PALETTE.map((c) => makeSprite(c.rgb, glowRadius, dpr))
-      }
+      dpr = nextDpr
       if (!stars.length) initStars()
     }
 
@@ -212,7 +191,7 @@ export default function GravityStarsBackground({
       }
     }
 
-    const spawnSparkle = (x, y) => {
+    const spawnBit = (x, y) => {
       if (trail.length >= TRAIL_MAX) trail.shift()
       const angle = Math.random() * Math.PI * 2
       const speed = 0.2 + Math.random() * 0.6
@@ -226,36 +205,32 @@ export default function GravityStarsBackground({
         ttl: 40 + Math.random() * 40, // frames at 60fps
         life: 1,
         color: pickColor(),
+        bit: Math.random() < 0.5 ? '0' : '1',
       })
     }
 
     const draw = () => {
       ctx.clearRect(0, 0, canvas.width, canvas.height)
+      ctx.textAlign = 'center'
+      ctx.textBaseline = 'middle'
+      const baseGlyphSize = 7 + glowIntensity * 0.18
       for (const p of stars) {
         const x = p.x * dpr
         const y = p.y * dpr
-        const sprite = sprites[p.color]
-        const r = glowRadius * dpr * (0.55 + p.glow * 0.45) * (p.size / (starsSize + 0.6))
-        ctx.globalAlpha = p.opacity * 0.6
-        ctx.drawImage(sprite, x - r, y - r, r * 2, r * 2)
-        ctx.globalAlpha = p.opacity
+        const glyphSize = baseGlyphSize * (0.85 + p.size * 0.12) * (0.92 + p.glow * 0.08)
+        ctx.font = `600 ${glyphSize * dpr}px ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace`
+        ctx.globalAlpha = Math.min(1, p.opacity * (0.72 + p.glow * 0.12))
         ctx.fillStyle = `rgb(${PALETTE[p.color].rgb})`
-        ctx.beginPath()
-        ctx.arc(x, y, p.size * dpr * 0.6, 0, Math.PI * 2)
-        ctx.fill()
+        ctx.fillText(p.bit, x, y)
       }
       for (const t of trail) {
         const x = t.x * dpr
         const y = t.y * dpr
         const fade = t.life * t.life
-        const r = glowRadius * dpr * 0.5 * (0.4 + t.life * 0.6)
-        ctx.globalAlpha = fade * 0.7
-        ctx.drawImage(sprites[t.color], x - r, y - r, r * 2, r * 2)
         ctx.globalAlpha = fade
         ctx.fillStyle = `rgb(${PALETTE[t.color].rgb})`
-        ctx.beginPath()
-        ctx.arc(x, y, t.size * dpr * 0.6 * (0.5 + t.life * 0.5), 0, Math.PI * 2)
-        ctx.fill()
+        ctx.font = `600 ${baseGlyphSize * dpr * (0.7 + t.life * 0.35)}px ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace`
+        ctx.fillText(t.bit, x, y)
       }
       ctx.globalAlpha = 1
     }
@@ -297,7 +272,7 @@ export default function GravityStarsBackground({
         if (n === 6) trailCarry = 0 // big jump: don't bank the remainder
         for (let i = 1; i <= n; i++) {
           const f = i / n
-          spawnSparkle(mouse.x + dx * f, mouse.y + dy * f)
+          spawnBit(mouse.x + dx * f, mouse.y + dy * f)
         }
       }
       mouse.x = x
