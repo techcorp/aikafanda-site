@@ -1,19 +1,20 @@
 import Link from 'next/link'
-import { ProductGrid, FeaturedShowcase, IconCloud } from '@/components/Products'
+import { ProductGrid, FeaturedShowcase, IconCloud, ProjectShowcase } from '@/components/Products'
 import { Reveal, Counter, MaskedLines } from '@/components/Motion'
 import { Kicker, Arrow, CTABand } from '@/components/UI'
-import { apps, appCategories, featuredApps } from '@/data/apps'
+import { apps, featuredApps } from '@/data/apps'
+import { projects } from '@/data/projects'
 import { site } from '@/data/site'
 
 export const metadata = {
   title: 'Products',
   description:
-    'Android apps designed, coded and shipped with AI — from an AI stylist and a receipt scanner to a Zakat calculator and a coin-merge puzzle.',
+    'AI-built Android apps, business automations and custom systems — from consumer products to social publishing workflows and restaurant POS software.',
 }
 
 const headerStats = [
   { value: apps.length, suffix: '', label: 'Apps shipped' },
-  { value: appCategories.length - 1, suffix: '', label: 'Categories' },
+  { value: projects.length, suffix: '', label: 'AI projects' },
   { value: 100, suffix: '%', label: 'AI-built end to end' },
 ]
 
@@ -21,18 +22,30 @@ export default function ProductsPage() {
   const schema = {
     '@context': 'https://schema.org',
     '@type': 'ItemList',
-    itemListElement: apps.map((a, i) => ({
-      '@type': 'ListItem',
-      position: i + 1,
-      item: {
-        '@type': 'SoftwareApplication',
-        name: a.name,
-        applicationCategory: 'MobileApplication',
-        operatingSystem: 'Android',
-        description: a.tagline,
-        author: { '@type': 'Organization', name: site.name },
-      },
-    })),
+    itemListElement: [
+      ...apps.map((a, i) => ({
+        '@type': 'ListItem',
+        position: i + 1,
+        item: {
+          '@type': 'SoftwareApplication',
+          name: a.name,
+          applicationCategory: 'MobileApplication',
+          operatingSystem: 'Android',
+          description: a.tagline,
+          author: { '@type': 'Organization', name: site.name },
+        },
+      })),
+      ...projects.map((project, i) => ({
+        '@type': 'ListItem',
+        position: apps.length + i + 1,
+        item: {
+          '@type': 'CreativeWork',
+          name: project.name,
+          description: project.tagline,
+          creator: { '@type': 'Organization', name: site.name },
+        },
+      })),
+    ],
   }
 
   return (
@@ -56,12 +69,12 @@ export default function ProductsPage() {
               <Kicker>Products</Kicker>
             </Reveal>
             <h1 className="mt-5 font-display text-hero text-fg">
-              <MaskedLines lines={['Every app.', 'Built with AI.']} />
+              <MaskedLines lines={['Apps and systems.', 'Built with AI.']} />
             </h1>
             <Reveal delay={200}>
               <p className="mt-5 max-w-xl text-body-lg text-muted">
-                Every app below was designed, coded and shipped using AI-assisted development — from
-                first prompt to Play Store listing.
+                Every build below was designed and coded using AI-assisted development — from Play
+                Store apps to business automations and custom operational software.
               </p>
             </Reveal>
 
@@ -96,6 +109,26 @@ export default function ProductsPage() {
             </h2>
           </div>
           <FeaturedShowcase apps={featuredApps} />
+        </div>
+      </section>
+
+      <section className="relative overflow-hidden py-14 md:py-20">
+        <div className="shell">
+          <div className="mb-8 max-w-3xl md:mb-10">
+            <Reveal>
+              <Kicker tone="indigo">Beyond mobile apps</Kicker>
+            </Reveal>
+            <h2 className="mt-4 font-display text-h1 text-fg">
+              <MaskedLines lines={['AI systems built for real operations']} />
+            </h2>
+            <Reveal delay={140}>
+              <p className="mt-4 max-w-2xl text-body-md text-muted">
+                Custom automations and business software built with the same AI-first workflow we use
+                for our own products.
+              </p>
+            </Reveal>
+          </div>
+          <ProjectShowcase projects={projects} />
         </div>
       </section>
 
@@ -135,8 +168,8 @@ export default function ProductsPage() {
 
       <CTABand
         kicker="Work with us"
-        title="Want an app like these for your business?"
-        body="From concept to Play Store in under 3 weeks. Talk directly to the people who write the code."
+        title="Want a product like these for your business?"
+        body="From mobile apps to automations and custom internal systems, talk directly to the people who design and build the software."
       />
     </>
   )

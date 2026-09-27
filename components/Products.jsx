@@ -452,3 +452,99 @@ export function ProductGrid() {
     </>
   )
 }
+
+/* ----------------------------------------------------- AI project showcase -- */
+
+const projectWhatsappUrl = (project) =>
+  `https://wa.me/923177416164?text=${encodeURIComponent(
+    `Assalam-o-Alaikum, I would like to discuss a project similar to ${project.name}.`
+  )}`
+
+function ProjectCard({ project, delay = 0 }) {
+  const inRef = useRef(null)
+  const inView = useInView(inRef, { threshold: 0.15 })
+  const tilt = useTilt(5)
+
+  return (
+    <div
+      ref={inRef}
+      id={project.slug}
+      className={`pc scroll-mt-28 ${inView ? 'is-in' : ''} h-full [perspective:1100px]`}
+      style={{ '--d': `${delay}ms`, '--accent': project.accent }}
+    >
+      <div
+        ref={tilt.ref}
+        onPointerMove={tilt.onPointerMove}
+        onPointerLeave={tilt.onPointerLeave}
+        className="pc-tilt group relative h-full rounded-2xl p-px"
+      >
+        <span aria-hidden className="pc-border pointer-events-none absolute inset-0 rounded-2xl" />
+
+        <article className="relative flex h-full flex-col overflow-hidden rounded-[calc(1rem-1px)] bg-surface">
+          <div className="pc-mask relative aspect-video overflow-hidden bg-void">
+            {/* eslint-disable-next-line @next/next/no-img-element */}
+            <img
+              src={project.cover}
+              alt={`${project.name} project cover`}
+              loading="lazy"
+              className="h-full w-full object-cover transition-transform duration-1000 ease-[cubic-bezier(0.22,1,0.36,1)] group-hover:scale-[1.025]"
+            />
+            <div className="absolute inset-0 bg-gradient-to-t from-surface via-transparent to-transparent" />
+            <span aria-hidden className="pc-sheen pointer-events-none absolute inset-y-0 -left-1/2 w-1/2" />
+            <span className="absolute left-3 top-3 rounded-full border border-white/10 bg-void/75 px-3 py-1.5 font-mono text-[10px] uppercase tracking-widest text-fg/90 backdrop-blur">
+              AI Project
+            </span>
+            <span className="absolute right-3 top-3 flex items-center gap-2 rounded-full border border-white/10 bg-void/75 px-3 py-1.5 font-mono text-[10px] uppercase tracking-widest text-fg/90 backdrop-blur">
+              <StatusDot beta={false} /> Completed
+            </span>
+          </div>
+
+          <div className="relative flex flex-1 flex-col p-6 md:p-7">
+            <div aria-hidden className="pc-spot pointer-events-none absolute inset-0 opacity-0 transition-opacity duration-500 group-hover:opacity-100" />
+            <div className="relative flex flex-wrap items-center gap-2">
+              <span className="chip-indigo">{project.category}</span>
+              <span className="font-mono text-[10px] uppercase tracking-widest text-muted">{project.client}</span>
+            </div>
+            <h3 className="relative mt-4 font-display text-h2 text-fg">{project.name}</h3>
+            <p className="relative mt-3 text-body-md text-muted">{project.tagline}</p>
+            <p className="relative mt-4 text-body-sm text-fg/75">{project.description}</p>
+
+            <ul className="relative mt-6 grid gap-2.5 sm:grid-cols-2">
+              {project.features.map((feature) => (
+                <li key={feature} className="flex gap-2.5 text-body-sm text-fg/85">
+                  <Check className="mt-0.5 h-3.5 w-3.5 shrink-0 text-indigo-soft" />
+                  {feature}
+                </li>
+              ))}
+            </ul>
+
+            <div className="relative mt-6 flex flex-wrap gap-2">
+              {project.stack.map((tool) => <span key={tool} className="chip">{tool}</span>)}
+            </div>
+
+            <div className="relative mt-7">
+              <a
+                href={projectWhatsappUrl(project)}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="btn-primary"
+              >
+                Build something similar <Arrow />
+              </a>
+            </div>
+          </div>
+        </article>
+      </div>
+    </div>
+  )
+}
+
+export function ProjectShowcase({ projects }) {
+  return (
+    <div className="grid gap-6 xl:grid-cols-2">
+      {projects.map((project, index) => (
+        <ProjectCard key={project.slug} project={project} delay={index * 110} />
+      ))}
+    </div>
+  )
+}
