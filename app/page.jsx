@@ -39,7 +39,7 @@ export default async function HomePage() {
       </section>
 
       {/* services */}
-      <section className="section !pb-0">
+      <section className="section !pb-0 !pt-12 md:!pt-16">
         <div className="shell">
           <SectionHead
             kicker="Services"
@@ -65,7 +65,7 @@ export default async function HomePage() {
               </Link>
             }
           />
-          <div className="mt-14">
+          <div className="mt-8 md:mt-10">
             <AppCarousel apps={apps} />
           </div>
         </div>

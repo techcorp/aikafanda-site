@@ -53,7 +53,7 @@ function Fan({ steps }) {
   const mid = (steps.length - 1) / 2
 
   return (
-    <div ref={ref} className={`process-fan ${inView ? 'is-in' : ''} mt-14 hidden justify-center py-8 lg:flex`}>
+    <div ref={ref} className={`process-fan ${inView ? 'is-in' : ''} mt-10 hidden justify-center py-4 lg:flex`}>
       {steps.map((p, i) => {
         const pose = POSE[i % POSE.length]
         return (
@@ -112,7 +112,7 @@ function Carousel({ steps }) {
     'absolute top-1/2 z-40 grid h-11 w-11 -translate-y-1/2 place-items-center rounded-full border border-line bg-surface/80 text-muted backdrop-blur transition-colors hover:border-muted hover:text-fg'
 
   return (
-    <div className="mt-12 lg:hidden">
+    <div className="mt-9 lg:hidden">
       <div className="relative">
         <div
           role="region"

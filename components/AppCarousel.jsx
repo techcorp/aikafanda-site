@@ -35,13 +35,14 @@ export default function AppCarousel({ apps }) {
 
   const count = apps.length
   const step = 360 / count
+  const radius = 490
 
   const paintRotation = useCallback((transition = 'none') => {
     const el = ring.current
     if (!el) return
     el.style.transition = transition
-    el.style.transform = `translateZ(-430px) rotateY(${-indexRef.current * step + motion.current.offset}deg)`
-  }, [step])
+    el.style.transform = `translateZ(-${radius}px) rotateY(${-indexRef.current * step + motion.current.offset}deg)`
+  }, [radius, step])
 
   useEffect(() => {
     const check = () => setCompact(window.innerWidth < 768)
@@ -191,10 +192,8 @@ export default function AppCarousel({ apps }) {
 
   const current = apps[index]
   const url = playUrl(current)
-  const radius = 430
-
   const sideButton =
-    'absolute top-1/2 z-10 grid h-11 w-11 -translate-y-1/2 place-items-center rounded-full border border-line bg-surface/80 text-muted backdrop-blur transition-colors hover:border-muted hover:text-fg'
+    'absolute top-1/2 z-10 grid h-11 w-11 -translate-y-1/2 place-items-center rounded-full border border-indigo/30 bg-surface/80 text-indigo-soft backdrop-blur transition-colors hover:border-indigo hover:bg-indigo/15 hover:text-white'
 
   return (
     <div>
@@ -205,7 +204,7 @@ export default function AppCarousel({ apps }) {
         aria-roledescription="carousel"
         aria-label="Our apps"
         data-cursor="Drag"
-        className="relative h-[300px] cursor-grab select-none outline-none active:cursor-grabbing sm:h-[340px]"
+        className="relative h-[330px] cursor-grab select-none outline-none active:cursor-grabbing sm:h-[370px]"
         style={{ perspective: '1500px' }}
         onKeyDown={onKeyDown}
         onPointerDown={onPointerDown}
@@ -240,7 +239,7 @@ export default function AppCarousel({ apps }) {
                 }}
                 aria-label={front ? `${app.name}, current` : `Show ${app.name}`}
                 aria-current={front}
-                className="absolute left-1/2 top-1/2 w-[300px] text-left sm:w-[340px]"
+                className="absolute left-1/2 top-1/2 w-[340px] text-left sm:w-[420px]"
                 style={{
                   transform: `translate(-50%, -50%) rotateY(${i * step}deg) translateZ(${radius}px)`,
                   // Fully opaque at every angle; cards turned away are culled by
@@ -315,11 +314,11 @@ export default function AppCarousel({ apps }) {
       </div>
 
       {/* details + controls */}
-      <div className="mt-8 flex flex-col items-center gap-6">
+      <div className="mt-5 flex flex-col items-center gap-4">
         <div key={current.slug} className="max-w-xl text-center animate-[fadeUp_450ms_cubic-bezier(0.22,1,0.36,1)_both]">
           <h3 className="font-display text-h2 text-fg">{current.name}</h3>
-          <p className="mx-auto mt-3 max-w-md text-body-md text-muted">{current.tagline}</p>
-          <div className="mt-6 flex flex-wrap justify-center gap-3">
+          <p className="mx-auto mt-2.5 max-w-md text-body-md text-muted">{current.tagline}</p>
+          <div className="mt-4 flex flex-wrap justify-center gap-3">
             {url ? (
               <a href={url} target="_blank" rel="noopener noreferrer" className="btn-primary !py-2.5 !text-[13px]">
                 <PlayGlyph className="h-3.5 w-3.5" />

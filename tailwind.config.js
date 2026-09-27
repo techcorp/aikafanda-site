@@ -38,7 +38,7 @@ module.exports = {
         kicker: ['0.6875rem', { lineHeight: '1.45', letterSpacing: '0.06em', fontWeight: '600' }],
       },
       borderRadius: { DEFAULT: '0.5rem', md: '0.75rem', lg: '1rem', xl: '1.5rem' },
-      maxWidth: { shell: '1280px', prose: '68ch' },
+      maxWidth: { shell: '1400px', prose: '68ch' },
       boxShadow: {
         glow: '0 0 24px -4px rgba(108, 92, 231, 0.32)',
         'glow-strong': '0 4px 20px rgba(108, 92, 231, 0.4)',

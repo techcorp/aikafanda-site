@@ -166,13 +166,13 @@ export function CTABand({
   return (
     <section className="section">
       <div className="shell">
-        <div className="noise relative overflow-hidden rounded-xl border border-indigo/25 bg-gradient-to-b from-indigo/[0.14] to-surface px-6 py-14 text-center md:px-16 md:py-20">
+        <div className="noise relative overflow-hidden rounded-xl border border-indigo/25 bg-gradient-to-b from-indigo/[0.14] to-surface px-6 py-10 text-center md:px-16 md:py-14">
           <div className="pointer-events-none absolute -top-24 left-1/2 h-64 w-[36rem] -translate-x-1/2 rounded-full bg-indigo/25 blur-[100px] animate-breathe" />
           <div className="relative">
             <Kicker>{kicker}</Kicker>
             <h2 className="mx-auto mt-5 max-w-2xl font-display text-h1 text-fg">{title}</h2>
             <p className="mx-auto mt-4 max-w-xl text-body-md text-muted">{body}</p>
-            <div className="mt-8 flex flex-col items-center justify-center gap-3 sm:flex-row">
+            <div className="mt-6 flex flex-col items-center justify-center gap-3 sm:flex-row">
               <Link href="/contact" className="btn-signal w-full sm:w-auto">
                 Start a project
               </Link>
@@ -180,7 +180,7 @@ export function CTABand({
                 Email us directly
               </a>
             </div>
-            <p className="mt-6 break-words font-mono text-kicker uppercase text-muted">
+            <p className="mt-5 break-words font-mono text-kicker uppercase text-muted">
               Or reach founders directly at support@aikafanda.com
             </p>
           </div>

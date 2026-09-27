@@ -36,8 +36,14 @@
   .shell {
     @apply mx-auto w-full max-w-shell px-5 md:px-8;
   }
+
+  @media (min-width: 1920px) {
+    .shell {
+      max-width: 1600px;
+    }
+  }
   .section {
-    @apply py-20 md:py-28;
+    @apply py-14 md:py-16;
   }
 
   /* Card with the hardware bevel hairline from the design system */
@@ -121,11 +127,11 @@
     box-shadow: 0 4px 20px rgba(108, 92, 231, 0.24);
   }
   .btn-signal {
-    @apply btn bg-amber text-void;
-    --liquid-button-color: #ffd078;
+    @apply btn bg-indigo-hi text-white;
+    --liquid-button-color: #9b8df8;
   }
   .btn-signal:hover {
-    box-shadow: 0 4px 20px rgba(255, 176, 32, 0.32);
+    box-shadow: 0 4px 20px rgba(108, 92, 231, 0.4);
   }
 
   .chip {
@@ -1448,7 +1454,7 @@
     background: rgba(108, 92, 231, 0.16);
   }
   .btn-signal:hover {
-    background: #ffbd58;
+    background: #7d6ff0;
   }
 }
 

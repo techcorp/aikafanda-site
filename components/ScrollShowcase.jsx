@@ -238,7 +238,7 @@ export default function ScrollShowcase({ items, variant = 'apps' }) {
   }
 
   const url = isServices ? null : playUrl(current)
-  const pinnedHeight = isServices ? count * 70 + 70 : count * 62 + 60
+  const pinnedHeight = isServices ? count * 52 + 55 : count * 56 + 55
 
   return (
     <div ref={sectionRef} style={{ height: `${pinnedHeight}vh` }} data-showcase={variant} data-showcase-mode="pinned">
