@@ -4,10 +4,12 @@ import { Marquee, Reveal, Counter } from '@/components/Motion'
 import { SectionHead, Kicker, Arrow, CTABand } from '@/components/UI'
 import ScrollShowcase from '@/components/ScrollShowcase'
 import AppCarousel from '@/components/AppCarousel'
+import { ProjectShowcase } from '@/components/Products'
 import ProcessCards from '@/components/ProcessCards'
 import { stats, marqueeItems, processSteps } from '@/data/site'
 import { services } from '@/data/services'
 import { apps } from '@/data/apps'
+import { projects } from '@/data/projects'
 import { getPosts, formatDate } from '@/lib/blogger'
 
 export const revalidate = 600
@@ -71,6 +73,25 @@ export default async function HomePage() {
         </div>
       </section>
 
+
+      {/* AI projects */}
+      <section className="section !pt-6 md:!pt-10">
+        <div className="shell">
+          <SectionHead
+            kicker="AI Projects"
+            title="Beyond apps. Built for real operations."
+            body="AI automations and custom business systems designed around real workflows."
+            action={
+              <Link href="/products#ai-projects" className="btn-ghost">
+                Explore AI projects
+              </Link>
+            }
+          />
+          <div className="mt-8 md:mt-10">
+            <ProjectShowcase projects={projects} />
+          </div>
+        </div>
+      </section>
       {/* process */}
       <section className="section">
         <div className="shell">

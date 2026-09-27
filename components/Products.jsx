@@ -481,7 +481,7 @@ function ProjectCard({ project, delay = 0 }) {
         <span aria-hidden className="pc-border pointer-events-none absolute inset-0 rounded-2xl" />
 
         <article className="relative flex h-full flex-col overflow-hidden rounded-[calc(1rem-1px)] bg-surface">
-          <div className="pc-mask relative aspect-video overflow-hidden bg-void">
+          <div className="pc-mask relative aspect-[2/1] overflow-hidden bg-void">
             {/* eslint-disable-next-line @next/next/no-img-element */}
             <img
               src={project.cover}
@@ -499,17 +499,16 @@ function ProjectCard({ project, delay = 0 }) {
             </span>
           </div>
 
-          <div className="relative flex flex-1 flex-col p-6 md:p-7">
+          <div className="relative flex flex-1 flex-col p-5">
             <div aria-hidden className="pc-spot pointer-events-none absolute inset-0 opacity-0 transition-opacity duration-500 group-hover:opacity-100" />
             <div className="relative flex flex-wrap items-center gap-2">
               <span className="chip-indigo">{project.category}</span>
               <span className="font-mono text-[10px] uppercase tracking-widest text-muted">{project.client}</span>
             </div>
-            <h3 className="relative mt-4 font-display text-h2 text-fg">{project.name}</h3>
-            <p className="relative mt-3 text-body-md text-muted">{project.tagline}</p>
-            <p className="relative mt-4 text-body-sm text-fg/75">{project.description}</p>
+            <h3 className="relative mt-3 font-display text-h3 text-fg">{project.name}</h3>
+            <p className="relative mt-2 text-body-sm text-muted">{project.tagline}</p>
 
-            <ul className="relative mt-6 grid gap-2.5 sm:grid-cols-2">
+            <ul className="relative mt-4 grid gap-2 sm:grid-cols-2">
               {project.features.map((feature) => (
                 <li key={feature} className="flex gap-2.5 text-body-sm text-fg/85">
                   <Check className="mt-0.5 h-3.5 w-3.5 shrink-0 text-indigo-soft" />
@@ -518,16 +517,16 @@ function ProjectCard({ project, delay = 0 }) {
               ))}
             </ul>
 
-            <div className="relative mt-6 flex flex-wrap gap-2">
+            <div className="relative mt-4 flex flex-wrap gap-2">
               {project.stack.map((tool) => <span key={tool} className="chip">{tool}</span>)}
             </div>
 
-            <div className="relative mt-7">
+            <div className="relative mt-5">
               <a
                 href={projectWhatsappUrl(project)}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="btn-primary"
+                className="btn-primary !px-4 !py-2.5 !text-[13px]"
               >
                 Build something similar <Arrow />
               </a>
@@ -541,7 +540,7 @@ function ProjectCard({ project, delay = 0 }) {
 
 export function ProjectShowcase({ projects }) {
   return (
-    <div className="grid gap-6 xl:grid-cols-2">
+    <div className="mx-auto grid max-w-[1120px] gap-5 md:grid-cols-2">
       {projects.map((project, index) => (
         <ProjectCard key={project.slug} project={project} delay={index * 110} />
       ))}

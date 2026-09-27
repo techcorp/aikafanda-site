@@ -112,7 +112,7 @@ export default function ProductsPage() {
         </div>
       </section>
 
-      <section className="relative overflow-hidden py-14 md:py-20">
+      <section id="ai-projects" className="relative scroll-mt-24 overflow-hidden py-12 md:py-16">
         <div className="shell">
           <div className="mb-8 max-w-3xl md:mb-10">
             <Reveal>
