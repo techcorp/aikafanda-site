@@ -8,7 +8,7 @@ import { apps } from '@/data/apps'
 /* ------------------------------------------------------------ OrbitHero -- */
 
 /** Founder badge at the centre, every shipped app circling on two rings. */
-export function OrbitHero({ initials = 'HA' }) {
+export function OrbitHero() {
   const ref = useRef(null)
   const inView = useInView(ref, { threshold: 0.25 })
   const inner = apps.slice(0, 3)
@@ -54,8 +54,15 @@ export function OrbitHero({ initials = 'HA' }) {
         <span aria-hidden className="ab-halo absolute inset-0 rounded-full" />
         <span aria-hidden className="ab-halo absolute inset-0 rounded-full [animation-delay:-1.5s]" />
         <span aria-hidden className="ab-conic absolute -inset-[3px] rounded-full" />
-        <span className="relative grid h-full w-full place-items-center rounded-full border border-line bg-surface-2 font-display text-[1.6rem] font-bold text-fg sm:text-[2rem]">
-          {initials}
+        <span className="relative grid h-full w-full place-items-center rounded-full border border-line bg-surface-2">
+          {/* eslint-disable-next-line @next/next/no-img-element */}
+          <img
+            src="/logo-mark.webp"
+            alt="AI ka Fanda"
+            width={96}
+            height={60}
+            className="h-auto w-[68%] object-contain"
+          />
         </span>
       </div>
 
