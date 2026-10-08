@@ -110,13 +110,15 @@ export default async function HomePage() {
 
       {/* testimonials */}
       <section className="section">
-        <div className="shell grid items-center gap-8 lg:grid-cols-[0.8fr_1.2fr] lg:gap-12">
+        <div className="shell">
           <SectionHead
             kicker="Testimonials"
             title="What clients say"
             body="Founders and teams we have built apps, automations and business software for."
           />
-          <Testimonials items={testimonials} />
+          <div className="mt-8 md:mt-10">
+            <Testimonials items={testimonials} />
+          </div>
         </div>
       </section>
 

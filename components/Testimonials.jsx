@@ -84,18 +84,25 @@ function shift(items, n) {
   return [...items.slice(k), ...items.slice(0, k)]
 }
 
+// Fade all four edges with a mask (not overlays) so the starfield behind stays visible.
+const EDGE_FADE =
+  'linear-gradient(to right, transparent, #000 20%, #000 80%, transparent), linear-gradient(to bottom, transparent, #000 20%, #000 80%, transparent)'
+
 /**
- * Vertical marquee columns on a tilted 3D plane, clipped inside a framed box
- * with soft fades on every edge.
+ * Vertical marquee columns on a tilted 3D plane, clipped to the section with
+ * soft fades on every edge.
  */
-export default function Testimonials({ items, columns = 5 }) {
+export default function Testimonials({ items, columns = 7 }) {
   const cols = Array.from({ length: columns }, (_, c) => shift(items, c * 2))
 
   return (
-    <div className="relative flex h-[22rem] w-full items-center justify-center overflow-hidden rounded-xl border border-line bg-void [perspective:300px] sm:h-[26rem]">
+    <div
+      className="relative flex h-[22rem] w-full items-center justify-center overflow-hidden [perspective:300px] sm:h-[28rem]"
+      style={{ maskImage: EDGE_FADE, WebkitMaskImage: EDGE_FADE, maskComposite: 'intersect', WebkitMaskComposite: 'source-in' }}
+    >
       <div
         className="flex items-start gap-3"
-        style={{ transform: 'translateX(-40px) translateZ(-90px) rotateX(20deg) rotateY(-10deg) rotateZ(20deg)' }}
+        style={{ transform: 'translateX(-80px) translateZ(-90px) rotateX(20deg) rotateY(-10deg) rotateZ(20deg)' }}
       >
         {cols.map((col, c) => (
           <LoopMarquee
@@ -107,7 +114,7 @@ export default function Testimonials({ items, columns = 5 }) {
             gap="0.75rem"
             duration={30 + (c % 3) * 6}
             ariaLabel={c === 0 ? 'Client testimonials' : undefined}
-            className={`h-[40rem] ${c > 2 ? 'hidden sm:flex' : ''}`}
+            className={`h-[44rem] ${c > 4 ? 'hidden lg:flex' : c > 2 ? 'hidden sm:flex' : ''}`}
           >
             {col.map((t) => (
               <TestimonialCard key={t.project} t={t} />
@@ -115,11 +122,6 @@ export default function Testimonials({ items, columns = 5 }) {
           </LoopMarquee>
         ))}
       </div>
-
-      <div className="pointer-events-none absolute inset-x-0 top-0 h-1/4 bg-gradient-to-b from-void" />
-      <div className="pointer-events-none absolute inset-x-0 bottom-0 h-1/4 bg-gradient-to-t from-void" />
-      <div className="pointer-events-none absolute inset-y-0 left-0 w-1/4 bg-gradient-to-r from-void" />
-      <div className="pointer-events-none absolute inset-y-0 right-0 w-1/4 bg-gradient-to-l from-void" />
     </div>
   )
 }
