@@ -1,5 +1,5 @@
 import './globals.css'
-import { Inter, Space_Grotesk, JetBrains_Mono } from 'next/font/google'
+import localFont from 'next/font/local'
 import Nav from '@/components/Nav'
 import Footer from '@/components/Footer'
 import SmoothScroll from '@/components/SmoothScroll'
@@ -8,9 +8,10 @@ import GravityStarsBackground from '@/components/GravityStars'
 import AdblockWall from '@/components/AdblockWall'
 import { site } from '@/data/site'
 
-const display = Space_Grotesk({ subsets: ['latin'], weight: ['500', '600', '700'], variable: '--font-display', display: 'swap' })
-const body = Inter({ subsets: ['latin'], weight: ['300', '400', '500', '600', '700'], variable: '--font-body', display: 'swap' })
-const mono = JetBrains_Mono({ subsets: ['latin'], weight: ['400', '500', '600'], variable: '--font-mono', display: 'swap' })
+// Self-hosted (variable, latin) so builds don't depend on fetching Google Fonts.
+const display = localFont({ src: './fonts/space-grotesk-latin-wght-normal.woff2', weight: '300 700', variable: '--font-display', display: 'swap' })
+const body = localFont({ src: './fonts/inter-latin-wght-normal.woff2', weight: '100 900', variable: '--font-body', display: 'swap' })
+const mono = localFont({ src: './fonts/jetbrains-mono-latin-wght-normal.woff2', weight: '100 800', variable: '--font-mono', display: 'swap' })
 
 export const metadata = {
   metadataBase: new URL(site.url),
