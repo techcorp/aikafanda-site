@@ -7,10 +7,12 @@ import AppCarousel from '@/components/AppCarousel'
 import { ProjectShowcase } from '@/components/Products'
 import ProcessCards from '@/components/ProcessCards'
 import BlogCoverflow from '@/components/BlogCoverflow'
+import Testimonials from '@/components/Testimonials'
 import { stats, marqueeItems, processSteps } from '@/data/site'
 import { services } from '@/data/services'
 import { apps } from '@/data/apps'
 import { projects } from '@/data/projects'
+import { testimonials } from '@/data/testimonials'
 import { getPosts, formatDate } from '@/lib/blogger'
 
 export const revalidate = 600
@@ -103,6 +105,20 @@ export default async function HomePage() {
           />
 
           <ProcessCards steps={processSteps} />
+        </div>
+      </section>
+
+      {/* testimonials */}
+      <section className="section">
+        <div className="shell">
+          <SectionHead
+            kicker="Testimonials"
+            title="What clients say"
+            body="Founders and teams we have built apps, automations and business software for."
+          />
+          <div className="mt-8 md:mt-10">
+            <Testimonials items={testimonials} />
+          </div>
         </div>
       </section>
 

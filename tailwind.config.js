@@ -46,6 +46,8 @@ module.exports = {
       },
       keyframes: {
         marquee: { from: { transform: 'translateX(0)' }, to: { transform: 'translateX(-50%)' } },
+        'marquee-x': { from: { transform: 'translateX(0)' }, to: { transform: 'translateX(calc(-100% - var(--gap)))' } },
+        'marquee-y': { from: { transform: 'translateY(0)' }, to: { transform: 'translateY(calc(-100% - var(--gap)))' } },
         float: { '0%,100%': { transform: 'translateY(0)' }, '50%': { transform: 'translateY(-14px)' } },
         pulseSoft: { '0%,100%': { opacity: 1 }, '50%': { opacity: 0.45 } },
         breathe: { '0%,100%': { opacity: 0.35, transform: 'scale(1)' }, '50%': { opacity: 0.6, transform: 'scale(1.08)' } },
@@ -53,6 +55,8 @@ module.exports = {
       },
       animation: {
         marquee: 'marquee 32s linear infinite',
+        'marquee-x': 'marquee-x var(--duration, 40s) linear infinite',
+        'marquee-y': 'marquee-y var(--duration, 40s) linear infinite',
         float: 'float 9s ease-in-out infinite',
         pulseSoft: 'pulseSoft 2.4s ease-in-out infinite',
         breathe: 'breathe 8s ease-in-out infinite',
