@@ -55,7 +55,7 @@ export default function HeroVisual() {
   useTilt(ref)
 
   return (
-    <div ref={ref} className="hv-wrap relative mx-auto w-[92%] max-w-[36rem] sm:w-full" aria-hidden="true">
+    <div ref={ref} className="hv-wrap relative mx-auto w-[92%] max-w-[30rem] sm:w-full lg:mr-0" aria-hidden="true">
       <div className="hv-stage">
         {/* glowing platform */}
         <div className="hv-floor">
@@ -67,21 +67,21 @@ export default function HeroVisual() {
 
         <div className="hv-scene">
           {/* data links from the core to each panel */}
-          <svg className="hv-links" viewBox="0 0 560 515" fill="none">
+          <svg className="hv-links" viewBox="0 0 560 450" fill="none">
             <defs>
               <linearGradient id="hv-link" x1="0" y1="0" x2="1" y2="1">
                 <stop offset="0" stopColor="#8B7CF6" />
                 <stop offset="1" stopColor="#FFB020" />
               </linearGradient>
             </defs>
-            <path d="M240 205 C 222 192, 212 186, 196 176" />
-            <path d="M300 185 C 318 152, 352 130, 378 114" />
-            <path d="M340 255 C 356 255, 372 258, 388 262" />
-            <path d="M245 305 C 232 314, 214 318, 196 318" />
+            <path d="M240 185 C 222 172, 212 166, 196 158" />
+            <path d="M300 165 C 318 135, 352 115, 378 102" />
+            <path d="M340 230 C 356 230, 372 232, 388 236" />
+            <path d="M245 285 C 232 296, 214 304, 196 308" />
           </svg>
 
           {/* AI core chip */}
-          <div className="hv-layer" style={{ left: '22em', top: '18.5em', '--z': '5em' }}>
+          <div className="hv-layer" style={{ left: '22em', top: '16.5em', '--z': '5em' }}>
             <div className="hv-core-halo" />
             <div className="hv-core-halo hv-core-halo--late" />
             <div className="hv-core">
@@ -111,11 +111,6 @@ export default function HeroVisual() {
                     <span className="hv-bar hv-bar--dim" style={{ width: '44%' }} />
                     <span className="hv-pill" />
                   </div>
-                  <div className="hv-site-tiles">
-                    <span />
-                    <span />
-                    <span />
-                  </div>
                 </div>
                 <Tag>Website</Tag>
               </div>
@@ -131,18 +126,13 @@ export default function HeroVisual() {
                   <span className="hv-bot-dot" />
                   Shipped. Arriving Friday.
                 </div>
-                <div className="hv-typing">
-                  <i />
-                  <i />
-                  <i />
-                </div>
                 <Tag color="text-emerald-300">Chatbot</Tag>
               </div>
             </div>
           </div>
 
           {/* phone app */}
-          <div className="hv-layer" style={{ left: '39em', top: '14.5em', '--z': '11em' }}>
+          <div className="hv-layer" style={{ left: '39em', top: '14em', '--z': '11em' }}>
             <div className="hv-float" style={{ '--fd': '-1.5s' }}>
               <div className="hv-phone hv-enter" style={{ '--d': '450ms' }}>
                 <div className="hv-notch" />
@@ -154,10 +144,6 @@ export default function HeroVisual() {
                   </div>
                 </div>
                 <div className="hv-app-card" />
-                <div className="hv-app-row">
-                  <span />
-                  <span />
-                </div>
                 <div className="hv-app-list">
                   <span className="hv-bar hv-bar--dim" style={{ width: '90%' }} />
                   <span className="hv-bar hv-bar--dim" style={{ width: '70%' }} />
@@ -173,7 +159,7 @@ export default function HeroVisual() {
           </div>
 
           {/* automation flow */}
-          <div className="hv-layer" style={{ left: '1em', top: '32em', '--z': '14em' }}>
+          <div className="hv-layer" style={{ left: '1em', top: '31em', '--z': '14em' }}>
             <div className="hv-float" style={{ '--fd': '-4.5s' }}>
               <div className="hv-card hv-enter" style={{ '--d': '600ms', width: '25em' }}>
                 <div className="hv-flow">
@@ -207,33 +193,6 @@ export default function HeroVisual() {
             </div>
           </div>
 
-          {/* live status chip */}
-          <div className="hv-layer" style={{ left: '29em', top: '45.5em', '--z': '18em' }}>
-            <div className="hv-float" style={{ '--fd': '-2s' }}>
-              <div className="hv-chip hv-enter" style={{ '--d': '750ms' }}>
-                <span className="hv-chip-dot" />
-                <span>
-                  <b className="font-mono">Store review passed</b>
-                  <em>StyleSnap v2.4 is live on Google Play</em>
-                </span>
-              </div>
-            </div>
-          </div>
-
-          {/* floating sparks */}
-          {[
-            ['18em', '9em', '8em', '0s'],
-            ['30em', '6em', '2em', '-2s'],
-            ['50em', '42em', '12em', '-4s'],
-            ['8em', '27em', '4em', '-1s'],
-            ['36em', '36em', '16em', '-3s'],
-          ].map(([l, t, z, fd], i) => (
-            <div key={i} className="hv-layer" style={{ left: l, top: t, '--z': z }}>
-              <div className="hv-float" style={{ '--fd': fd }}>
-                <span className={`hv-spark ${i % 2 ? 'hv-spark--amber' : ''}`} />
-              </div>
-            </div>
-          ))}
         </div>
       </div>
     </div>

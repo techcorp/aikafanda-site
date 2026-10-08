@@ -1587,7 +1587,7 @@ html.adwall-on body {
 /* ------------------------------------------------------------------ */
 .hv-wrap {
   container-type: inline-size;
-  aspect-ratio: 560 / 515;
+  aspect-ratio: 560 / 450;
   --rx: 0deg;
   --ry: 0deg;
   --ease: cubic-bezier(0.22, 1, 0.36, 1);
@@ -1607,7 +1607,7 @@ html.adwall-on body {
   position: absolute;
   inset: 0;
   transform-style: preserve-3d;
-  transform: rotateX(calc(10deg + var(--rx))) rotateY(calc(-16deg + var(--ry))) rotateZ(1deg);
+  transform: rotateX(calc(8deg + var(--rx))) rotateY(calc(-12deg + var(--ry)));
 }
 .hv-layer {
   position: absolute;
@@ -1634,9 +1634,10 @@ html.adwall-on body {
 
 /* platform */
 .hv-floor {
+  opacity: 0.6;
   position: absolute;
   left: 50%;
-  top: 62%;
+  top: 60%;
   width: 50em;
   height: 50em;
   margin: -25em 0 0 -25em;
@@ -1909,7 +1910,7 @@ html.adwall-on body {
 .hv-phone {
   position: relative;
   width: 14em;
-  height: 28em;
+  height: 25em;
   padding: 2.4em 1.1em 1.2em;
   border-radius: 2.6em;
   background: linear-gradient(170deg, #1e1c2b, #111016);
