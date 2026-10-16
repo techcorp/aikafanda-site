@@ -6,6 +6,7 @@ import SmoothScroll from '@/components/SmoothScroll'
 import Cursor from '@/components/Cursor'
 import GravityStarsBackground from '@/components/GravityStars'
 import AdblockWall from '@/components/AdblockWall'
+import Buddy from '@/components/Buddy'
 import { site } from '@/data/site'
 
 // Self-hosted (variable, latin) so builds don't depend on fetching Google Fonts.
@@ -105,6 +106,7 @@ export default function RootLayout({ children }) {
         <Nav />
         <main id="main">{children}</main>
         <Footer />
+        <Buddy />
         <AdblockWall />
       </body>
     </html>
