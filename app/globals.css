@@ -415,6 +415,143 @@
   filter: drop-shadow(0 24px 30px rgba(0, 0, 0, 0.5));
 }
 
+/* home services showcase: cursor depth, orbital energy and staged copy */
+.showcase-stage {
+  --ss-rx: 0deg;
+  --ss-ry: 0deg;
+  --ss-gx: 0px;
+  --ss-gy: 0px;
+}
+.showcase-frame {
+  transform: rotateX(var(--ss-rx)) rotateY(var(--ss-ry)) scale(1.012);
+  transform-style: preserve-3d;
+  transition: transform 0.28s cubic-bezier(0.22, 1, 0.36, 1), border-color 0.5s ease;
+  will-change: transform;
+}
+[data-active='false'] .showcase-frame {
+  transform: none;
+}
+[data-active='true'] .showcase-frame {
+  border-color: rgba(139, 124, 246, 0.42);
+}
+.showcase-image {
+  transform: translateZ(22px);
+}
+.showcase-glint {
+  left: 50%;
+  top: 42%;
+  width: 16rem;
+  height: 16rem;
+  border-radius: 999px;
+  opacity: 0;
+  background: radial-gradient(circle, rgba(255, 255, 255, 0.13), rgba(139, 124, 246, 0.05) 34%, transparent 68%);
+  transform: translate3d(calc(-50% + var(--ss-gx)), calc(-50% + var(--ss-gy)), 0);
+  transition: transform 0.3s cubic-bezier(0.22, 1, 0.36, 1), opacity 0.5s ease;
+  will-change: transform, opacity;
+}
+[data-active='true'] .showcase-glint {
+  opacity: 1;
+}
+.showcase-orbit {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  display: block;
+  width: 68%;
+  aspect-ratio: 1;
+  border: 1px dashed;
+  border-radius: 50%;
+  opacity: 0;
+  transform: translate(-50%, -50%) rotate(0deg) scale(0.72);
+}
+.showcase-orbit-b {
+  width: 48%;
+  border-style: solid;
+}
+[data-active='true'] .showcase-orbit-a {
+  opacity: 0.5;
+  animation: showcaseOrbit 18s linear infinite;
+}
+[data-active='true'] .showcase-orbit-b {
+  opacity: 0.36;
+  animation: showcaseOrbitReverse 12s linear infinite;
+}
+.showcase-orbit-dot {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  width: 68%;
+  aspect-ratio: 1;
+  border-radius: 50%;
+  opacity: 0;
+  transform: translate(-50%, -50%) rotate(0deg);
+}
+.showcase-orbit-dot::before {
+  content: '';
+  position: absolute;
+  left: 50%;
+  top: -3px;
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: var(--orbit-accent);
+  box-shadow: 0 0 18px var(--orbit-accent);
+}
+[data-active='true'] .showcase-orbit-dot {
+  opacity: 0.9;
+  animation: showcaseDot 9s linear infinite;
+}
+.showcase-scan {
+  opacity: 0;
+  transform: translateY(2rem);
+  box-shadow: 0 0 18px currentColor;
+}
+[data-active='true'] .showcase-scan {
+  opacity: 0.65;
+  animation: showcaseScan 4.8s cubic-bezier(0.22, 1, 0.36, 1) infinite;
+}
+.showcase-copy > * {
+  opacity: 0;
+  animation: showcaseCopyIn 0.72s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+}
+.showcase-copy > :nth-child(2) { animation-delay: 70ms; }
+.showcase-copy > :nth-child(3) { animation-delay: 130ms; }
+.showcase-copy > :nth-child(4) { animation-delay: 190ms; }
+.showcase-copy > :nth-child(5) { animation-delay: 250ms; }
+.showcase-copy > :nth-child(6) { animation-delay: 310ms; }
+.showcase-copy li {
+  animation: showcaseListIn 0.58s cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+.showcase-copy li:nth-child(2) { animation-delay: 250ms; }
+.showcase-copy li:nth-child(3) { animation-delay: 310ms; }
+.showcase-copy li:nth-child(4) { animation-delay: 370ms; }
+@keyframes showcaseOrbit {
+  from { transform: translate(-50%, -50%) rotate(0deg) scale(1); }
+  to { transform: translate(-50%, -50%) rotate(360deg) scale(1); }
+}
+@keyframes showcaseOrbitReverse {
+  from { transform: translate(-50%, -50%) rotate(360deg) scale(1); }
+  to { transform: translate(-50%, -50%) rotate(0deg) scale(1); }
+}
+@keyframes showcaseDot {
+  from { transform: translate(-50%, -50%) rotate(0deg); }
+  to { transform: translate(-50%, -50%) rotate(360deg); }
+}
+@keyframes showcaseScan {
+  0%, 12% { transform: translateY(2rem); opacity: 0; }
+  24% { opacity: 0.65; }
+  72% { opacity: 0.3; }
+  84%, 100% { transform: translateY(25rem); opacity: 0; }
+}
+@keyframes showcaseCopyIn {
+  from { opacity: 0; transform: translate3d(0, 18px, 0); }
+  to { opacity: 1; transform: translate3d(0, 0, 0); }
+}
+@keyframes showcaseListIn {
+  from { opacity: 0; transform: translate3d(12px, 0, 0); }
+  to { opacity: 1; transform: translate3d(0, 0, 0); }
+}
+
 /* orbit rings + floor shadow */
 .svc-orbit {
   opacity: 0;

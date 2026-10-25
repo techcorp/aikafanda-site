@@ -130,6 +130,7 @@ function settle(value) {
 /** Shared pinned depth showcase: renderers vary, scroll maths stays here. */
 export default function ScrollShowcase({ items, variant = 'apps' }) {
   const sectionRef = useRef(null)
+  const stageRef = useRef(null)
   const [progress, setProgress] = useState(0)
   const [enabled, setEnabled] = useState(null)
   const isServices = variant === 'services'
@@ -185,6 +186,41 @@ export default function ScrollShowcase({ items, variant = 'apps' }) {
       if (frame !== null) cancelAnimationFrame(frame)
       window.removeEventListener('scroll', requestRead)
       window.removeEventListener('resize', requestRead)
+    }
+  }, [enabled])
+
+  useEffect(() => {
+    if (enabled !== true) return undefined
+    const stage = stageRef.current
+    if (!stage) return undefined
+    let bounds = null
+    const reset = () => {
+      bounds = null
+      stage.style.setProperty('--ss-rx', '0deg')
+      stage.style.setProperty('--ss-ry', '0deg')
+      stage.style.setProperty('--ss-gx', '0px')
+      stage.style.setProperty('--ss-gy', '0px')
+    }
+    const enter = () => {
+      bounds = stage.getBoundingClientRect()
+    }
+    const move = (event) => {
+      if (event.pointerType !== 'mouse') return
+      if (!bounds) bounds = stage.getBoundingClientRect()
+      const x = Math.max(-1, Math.min(1, (event.clientX - bounds.left) / bounds.width * 2 - 1))
+      const y = Math.max(-1, Math.min(1, (event.clientY - bounds.top) / bounds.height * 2 - 1))
+      stage.style.setProperty('--ss-rx', `${(-y * 3.8).toFixed(2)}deg`)
+      stage.style.setProperty('--ss-ry', `${(x * 5.2).toFixed(2)}deg`)
+      stage.style.setProperty('--ss-gx', `${(x * 58).toFixed(1)}px`)
+      stage.style.setProperty('--ss-gy', `${(y * 34).toFixed(1)}px`)
+    }
+    stage.addEventListener('pointerenter', enter, { passive: true })
+    stage.addEventListener('pointermove', move, { passive: true })
+    stage.addEventListener('pointerleave', reset, { passive: true })
+    return () => {
+      stage.removeEventListener('pointerenter', enter)
+      stage.removeEventListener('pointermove', move)
+      stage.removeEventListener('pointerleave', reset)
     }
   }, [enabled])
 
@@ -244,14 +280,17 @@ export default function ScrollShowcase({ items, variant = 'apps' }) {
     <div ref={sectionRef} style={{ height: `${pinnedHeight}vh` }} data-showcase={variant} data-showcase-mode="pinned">
       <div className="sticky top-0 flex h-screen items-center overflow-hidden">
         <div className={`shell grid w-full items-center gap-12 lg:grid-cols-[1.15fr_0.85fr] ${isServices ? 'lg:-translate-y-[6vh] 2xl:-translate-y-[8vh]' : ''}`}>
-          <div className="relative mx-auto aspect-[16/10] w-full max-w-[720px]" style={{ perspective: '1400px', perspectiveOrigin: '50% 45%', transformStyle: 'preserve-3d' }}>
+          <div ref={stageRef} className="showcase-stage relative mx-auto aspect-[16/10] w-full max-w-[720px]" style={{ perspective: '1400px', perspectiveOrigin: '50% 45%', transformStyle: 'preserve-3d' }}>
             {items.map((item, index) => {
               const offset = index - position
               const passed = offset < 0
               const z = passed ? -offset * 420 : -offset * 260
-              const y = passed ? offset * 70 : offset * 30
+              const x = passed ? offset * 90 : offset * 30
+              const y = passed ? offset * 76 : offset * 24
               const scale = passed ? 1 + -offset * 0.08 : 1 - offset * 0.04
               const rotateX = Math.max(-8, Math.min(6, offset * 2.4))
+              const rotateY = Math.max(-7, Math.min(7, -offset * 3.2))
+              const rotateZ = passed ? Math.max(-2.5, offset * 1.6) : Math.min(1.5, offset * 0.55)
               const opacity = passed ? Math.max(0, 1 + offset / 0.6) : Math.max(0, 1 - offset * 0.4)
               return (
                 <div
@@ -260,14 +299,14 @@ export default function ScrollShowcase({ items, variant = 'apps' }) {
                   data-showcase-card={item.slug}
                   data-active={index === active ? 'true' : 'false'}
                   style={{
-                    transform: `translate3d(0, ${y}px, ${z}px) rotateX(${rotateX}deg) scale(${scale})`,
+                    transform: `translate3d(${x}px, ${y}px, ${z}px) rotateX(${rotateX}deg) rotateY(${rotateY}deg) rotateZ(${rotateZ}deg) scale(${scale})`,
                     opacity,
                     zIndex: Math.round(500 - offset * 40),
                     pointerEvents: index === active ? 'auto' : 'none',
                     willChange: 'transform, opacity',
                   }}
                 >
-                  <div className="h-full overflow-hidden rounded-xl border border-line bg-surface shadow-panel">
+                  <div className="showcase-frame h-full overflow-hidden rounded-xl border border-line bg-surface shadow-panel">
                     <div className="flex items-center gap-1.5 border-b border-line/70 px-4 py-2.5">
                       {['#FF5F57', '#FEBC2E', '#28C840'].map((color) => <span key={color} className="h-1.5 w-1.5 rounded-full" style={{ background: color }} aria-hidden="true" />)}
                       <span className="ml-2 font-mono text-[10px] uppercase tracking-widest text-muted">{item.slug}</span>
@@ -275,9 +314,18 @@ export default function ScrollShowcase({ items, variant = 'apps' }) {
                         {isServices ? 'Service' : item.status === 'beta' ? 'Closed testing' : 'Live'}
                       </span>
                     </div>
-                    <div className="relative h-[calc(100%-2.6rem)] bg-void">
+                    <div className="showcase-media relative h-[calc(100%-2.6rem)] overflow-hidden bg-void">
+                      {isServices ? (
+                        <div className="showcase-orbits pointer-events-none absolute inset-0" aria-hidden="true">
+                          <span className="showcase-orbit showcase-orbit-a" style={{ borderColor: `${item.accent}55` }} />
+                          <span className="showcase-orbit showcase-orbit-b" style={{ borderColor: `${item.accent}30` }} />
+                          <span className="showcase-orbit-dot" style={{ '--orbit-accent': item.accent }} />
+                        </div>
+                      ) : null}
                       {/* eslint-disable-next-line @next/next/no-img-element */}
-                      <img src={isServices ? item.image : item.banner} alt="" className={`h-full w-full ${isServices ? "svc-home-float object-contain p-6" : "object-cover"}`} />
+                      <img src={isServices ? item.image : item.banner} alt="" className={`showcase-image relative z-[2] h-full w-full ${isServices ? "svc-home-float object-contain p-6" : "object-cover"}`} />
+                      {isServices ? <span className="showcase-scan pointer-events-none absolute inset-x-0 top-0 z-[3] h-px" style={{ background: `linear-gradient(90deg, transparent, ${item.accent}, transparent)` }} aria-hidden="true" /> : null}
+                      <span className="showcase-glint pointer-events-none absolute z-[4]" aria-hidden="true" />
                       <span className="pointer-events-none absolute inset-0" style={{ boxShadow: `inset 0 -60px 80px -40px ${item.accent}30` }} aria-hidden="true" />
                     </div>
                   </div>
@@ -288,7 +336,7 @@ export default function ScrollShowcase({ items, variant = 'apps' }) {
           </div>
 
           <div className="relative" data-showcase-label={current.slug}>
-            <div key={current.slug} className="animate-[fadeUp_700ms_cubic-bezier(0.22,1,0.36,1)_both]">
+            <div key={current.slug} className="showcase-copy">
               {isServices ? (
                 <>
                   <div className="flex items-center gap-3">
