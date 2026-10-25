@@ -36,6 +36,22 @@ const BADGES = [
 const PET_LINES = ['Hehe 💜', 'Beep boop, that tickles!', 'Again! Again!', 'You’re my favourite human.', '*happy robot noises*']
 const BADGE_XP = 25
 const PET_CAP = 10 // pets per day that still earn XP
+const HOTSPOT_SELECTOR = '.btn-signal, .btn-primary, .btn-ghost, .link-arrow, [data-fandu-tip]'
+
+function hotspotTip(target) {
+  if (target.dataset.fanduTip) return target.dataset.fanduTip
+  const href = target.getAttribute('href') || ''
+  const label = (target.getAttribute('aria-label') || target.textContent || '').replace(/\s+/g, ' ').trim()
+  if (href.includes('wa.me')) return 'This opens WhatsApp with a ready-to-send project message.'
+  if (href.startsWith('mailto:')) return 'Prefer email? This opens a direct message to our team.'
+  if (href.includes('play.google.com')) return 'Want to see it live? This opens the app on Google Play.'
+  if (href.startsWith('/contact')) return 'Have an idea? Tell us about it and we’ll help shape the next step.'
+  if (href.startsWith('/services')) return 'See what we can design, automate and ship for your business.'
+  if (href.includes('ai-projects')) return 'These are real AI systems built for real operations.'
+  if (href.startsWith('/products')) return 'Explore the apps and AI projects we have already shipped.'
+  if (href.startsWith('/blog')) return 'Fresh AI ideas, practical guides and build notes live here.'
+  return label ? `${label} — I can show you what’s behind this.` : 'This looks important — take a closer look.'
+}
 
 const fresh = () => ({
   xp: 0,
@@ -183,9 +199,11 @@ export default function Buddy() {
   const [bubble, setBubble] = useState(null)
   const [talking, setTalking] = useState(false)
   const [hearts, setHearts] = useState([])
+  const [guideOffset, setGuideOffset] = useState({ x: 0, y: 0, side: 'left' })
   const wrap = useRef(null)
   const bot = useRef(null)
   const look = useRef(null)
+  const guideReturn = useRef(null)
 
   // Runs a change against the save, then awards any badges / level-ups it unlocked.
   const apply = useCallback((fn) => {
@@ -423,6 +441,68 @@ export default function Buddy() {
     }
   }, [ready])
 
+  // Jump beside important calls-to-action, explain them, then return home.
+  // This reacts to pointer entry/focus only; it does not update on pointermove.
+  useEffect(() => {
+    if (!ready || open || saveRef.current?.hidden) return
+    const reducedQuery = window.matchMedia('(prefers-reduced-motion: reduce)')
+    const coarseQuery = window.matchMedia('(pointer: coarse)')
+    let current = null
+
+    const goHome = () => {
+      current = null
+      clearTimeout(guideReturn.current)
+      setGuideOffset({ x: 0, y: 0, side: 'left' })
+    }
+
+    const visit = (target) => {
+      if (!target || target === current || wrap.current?.contains(target)) return
+      if (reducedQuery.matches || coarseQuery.matches) return
+      current = target
+      const targetRect = target.getBoundingClientRect()
+      const petRect = bot.current?.getBoundingClientRect()
+      if (!petRect || targetRect.width === 0 || targetRect.height === 0) return
+
+      const margin = window.innerWidth >= 640 ? 24 : 16
+      const gap = 18
+      const petWidth = petRect.width
+      const petHeight = petRect.height
+      const homeLeft = window.innerWidth - margin - petWidth
+      const homeTop = window.innerHeight - margin - petHeight
+      const fitsRight = targetRect.right + gap + petWidth <= window.innerWidth - margin
+      const wantedLeft = fitsRight ? targetRect.right + gap : targetRect.left - gap - petWidth
+      const wantedTop = targetRect.top + targetRect.height / 2 - petHeight / 2
+      const left = Math.max(margin, Math.min(window.innerWidth - margin - petWidth, wantedLeft))
+      const top = Math.max(82, Math.min(window.innerHeight - margin - petHeight, wantedTop))
+
+      setGuideOffset({ x: left - homeLeft, y: top - homeTop, side: left < 260 ? 'right' : 'left' })
+      setQueue([])
+      setBubble({ id: nextId(), text: hotspotTip(target), guide: true })
+      setMood('happy')
+      clearTimeout(guideReturn.current)
+      guideReturn.current = setTimeout(goHome, 3000)
+    }
+
+    const onPointerOver = (event) => visit(event.target.closest?.(HOTSPOT_SELECTOR))
+    const onFocusIn = (event) => visit(event.target.closest?.(HOTSPOT_SELECTOR))
+    const onMotionChange = () => {
+      if (reducedQuery.matches || coarseQuery.matches) goHome()
+    }
+    document.addEventListener('pointerover', onPointerOver, { passive: true })
+    document.addEventListener('focusin', onFocusIn)
+    window.addEventListener('resize', goHome, { passive: true })
+    reducedQuery.addEventListener('change', onMotionChange)
+    coarseQuery.addEventListener('change', onMotionChange)
+    return () => {
+      clearTimeout(guideReturn.current)
+      document.removeEventListener('pointerover', onPointerOver)
+      document.removeEventListener('focusin', onFocusIn)
+      window.removeEventListener('resize', goHome)
+      reducedQuery.removeEventListener('change', onMotionChange)
+      coarseQuery.removeEventListener('change', onMotionChange)
+    }
+  }, [ready, open])
+
   // Close the panel on Escape or a click elsewhere.
   useEffect(() => {
     if (!open) return
@@ -483,7 +563,13 @@ export default function Buddy() {
   const locked = BADGES.filter((b) => !save.badges.includes(b.id))
 
   return (
-    <div ref={wrap} className="fandu fixed bottom-4 right-4 z-[45] sm:bottom-6 sm:right-6" data-mood={mood}>
+    <div
+      ref={wrap}
+      className="fandu fandu-guide fixed bottom-4 right-4 z-[45] sm:bottom-6 sm:right-6"
+      data-mood={mood}
+      data-bubble-side={guideOffset.side}
+      style={{ '--fandu-x': `${guideOffset.x}px`, '--fandu-y': `${guideOffset.y}px` }}
+    >
       {open ? (
         <div
           role="dialog"
@@ -643,7 +729,11 @@ export default function Buddy() {
         <button
           ref={bot}
           type="button"
-          onClick={() => setOpen((o) => !o)}
+          onClick={() => {
+            clearTimeout(guideReturn.current)
+            setGuideOffset({ x: 0, y: 0, side: 'left' })
+            setOpen((o) => !o)
+          }}
           onDoubleClick={pet}
           aria-label={`Fandu, your site buddy — level ${lvl.n}. Open progress`}
           aria-expanded={open}

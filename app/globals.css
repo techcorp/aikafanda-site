@@ -2151,6 +2151,11 @@ html.adwall-on body {
 html.adwall-on .fandu {
   display: none;
 }
+.fandu-guide {
+  transform: translate3d(var(--fandu-x, 0), var(--fandu-y, 0), 0);
+  transition: transform 0.55s cubic-bezier(0.22, 1, 0.36, 1);
+  will-change: transform;
+}
 .fandu-bob {
   animation: fandu-bob 3.2s ease-in-out infinite;
 }
@@ -2190,7 +2195,26 @@ html.adwall-on .fandu {
 }
 .fandu-bubble {
   transform-origin: bottom right;
-  animation: fandu-pop 0.35s cubic-bezier(0.22, 1, 0.36, 1);
+  isolation: isolate;
+  animation: fandu-talk-in 0.5s cubic-bezier(0.22, 1, 0.36, 1), fandu-talk-float 1.8s 0.5s ease-in-out infinite;
+}
+.fandu-bubble::after {
+  content: '';
+  display: inline-block;
+  width: 0.35rem;
+  height: 0.85rem;
+  margin-left: 0.3rem;
+  border-radius: 999px;
+  background: #ffb020;
+  vertical-align: -0.1rem;
+  animation: fandu-caret 0.85s steps(1, end) infinite;
+}
+.fandu[data-bubble-side='right'] .fandu-bubble {
+  right: auto;
+  left: 0.25rem;
+  border-bottom-right-radius: 1rem;
+  border-bottom-left-radius: 0.25rem;
+  transform-origin: bottom left;
 }
 .fandu-panel {
   transform-origin: bottom right;
@@ -2239,6 +2263,19 @@ html.adwall-on .fandu {
 @keyframes fandu-pop {
   from { opacity: 0; transform: translateY(8px) scale(0.92); }
   to { opacity: 1; transform: none; }
+}
+@keyframes fandu-talk-in {
+  0% { opacity: 0; transform: translateY(12px) scale(0.82); }
+  60% { opacity: 1; transform: translateY(-3px) scale(1.03); }
+  100% { opacity: 1; transform: none; }
+}
+@keyframes fandu-talk-float {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-3px); }
+}
+@keyframes fandu-caret {
+  0%, 48% { opacity: 1; }
+  49%, 100% { opacity: 0.15; }
 }
 @keyframes fandu-heart {
   0% { opacity: 0; transform: translate(-50%, 0) scale(0.6); }
