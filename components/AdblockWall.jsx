@@ -12,6 +12,8 @@ const PROBES = [
   'https://ss.mrmnd.com/interstitial.js',
   'https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js',
 ]
+const PASS_KEY = 'aikafanda-adblock-pass'
+const PASS_TTL = 5 * 60 * 1000
 
 const STEPS = {
   AdBlock: ['Click the AdBlock icon in your toolbar', 'Choose “Don’t run on pages on this site”', 'Hit the button below'],
@@ -48,9 +50,36 @@ async function probeBlocked(url) {
   return true
 }
 
+async function siteReachable() {
+  try {
+    const response = await fetch(`/robots.txt?_=${Date.now()}`, { cache: 'no-store' })
+    return response.ok
+  } catch {
+    return false
+  }
+}
+
 async function detect() {
-  const results = await Promise.all([baitBlocked(), ...PROBES.map(probeBlocked)])
-  return results.some(Boolean)
+  const [bait, reachable, ...probes] = await Promise.all([baitBlocked(), siteReachable(), ...PROBES.map(probeBlocked)])
+
+  // A hidden bait is a direct blocker signal. Remote probes are only trusted
+  // when the site itself is reachable and every independent ad host fails.
+  // This avoids treating one flaky vendor, DNS issue or privacy filter as an ad blocker.
+  return bait || (reachable && probes.every(Boolean))
+}
+
+function hasRecentPass() {
+  try {
+    return Date.now() - Number(sessionStorage.getItem(PASS_KEY) || 0) < PASS_TTL
+  } catch {
+    return false
+  }
+}
+
+function rememberPass() {
+  try {
+    sessionStorage.setItem(PASS_KEY, String(Date.now()))
+  } catch {}
 }
 
 function ShieldIcon() {
@@ -83,8 +112,16 @@ export default function AdblockWall() {
       setBlocked(false)
       return
     }
+    if (hasRecentPass()) {
+      setBlocked(false)
+      return
+    }
     let alive = true
-    detect().then((b) => alive && setBlocked(b))
+    detect().then((b) => {
+      if (!alive) return
+      if (!b) rememberPass()
+      setBlocked(b)
+    })
     return () => {
       alive = false
     }
@@ -120,6 +157,8 @@ export default function AdblockWall() {
     const b = await detect()
     if (!b) {
       // ad scripts were blocked on first load, so reload to let them run
+      rememberPass()
+      setBlocked(false)
       window.location.reload()
       return
     }
