@@ -138,6 +138,7 @@ export default function ScrollShowcase({ items, variant = 'apps' }) {
   const position = settle(progress * (count - 1))
   const active = Math.max(0, Math.min(count - 1, Math.round(position)))
   const current = items[active]
+  const pinnedHeight = isServices ? count * 52 + 55 : count * 56 + 55
 
   useEffect(() => {
     const reduced = window.matchMedia('(prefers-reduced-motion: reduce)')
@@ -224,9 +225,25 @@ export default function ScrollShowcase({ items, variant = 'apps' }) {
     }
   }, [enabled])
 
-  if (enabled !== true && isServices) return <ServiceCarousel items={items} />
+  // Do not server-render the mobile carousel before media queries are known.
+  // Otherwise desktop refreshes briefly paint three carousel cards and replace
+  // them with the pinned scene after hydration. Reserve the final desktop height
+  // so the rest of the page also stays in place while detection completes.
+  if (enabled === null) {
+    return (
+      <div
+        aria-hidden="true"
+        className="invisible"
+        style={{ height: `${pinnedHeight}vh`, contain: 'layout paint' }}
+        data-showcase={variant}
+        data-showcase-mode="detecting"
+      />
+    )
+  }
 
-  if (enabled !== true) {
+  if (enabled === false && isServices) return <ServiceCarousel items={items} />
+
+  if (enabled === false) {
     return (
       <div className="shell space-y-6 py-12" data-showcase={variant} data-showcase-mode="stacked">
         {items.map((item, index) => (
@@ -274,8 +291,6 @@ export default function ScrollShowcase({ items, variant = 'apps' }) {
   }
 
   const url = isServices ? null : playUrl(current)
-  const pinnedHeight = isServices ? count * 52 + 55 : count * 56 + 55
-
   return (
     <div ref={sectionRef} style={{ height: `${pinnedHeight}vh` }} data-showcase={variant} data-showcase-mode="pinned">
       <div className="sticky top-0 flex h-screen items-center overflow-hidden">
