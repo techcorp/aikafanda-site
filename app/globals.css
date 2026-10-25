@@ -2145,6 +2145,7 @@ html.adwall-on body {
   .bc-card {
     transition: opacity 0.2s ease;
   }
+}
 
 /* ---- Site buddy (components/Buddy.jsx) ------------------------------------ */
 html.adwall-on .fandu {

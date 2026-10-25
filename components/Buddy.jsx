@@ -1,6 +1,7 @@
 'use client'
 
 import { useCallback, useEffect, useRef, useState } from 'react'
+import Link from 'next/link'
 import { usePathname } from 'next/navigation'
 
 /**
@@ -257,6 +258,34 @@ export default function Buddy() {
     })
   }, [pathname, ready, apply])
 
+  // Offer one useful, contextual hint as each main homepage section comes into view.
+  useEffect(() => {
+    if (!ready || pathname !== '/') return
+    const sections = Array.from(document.querySelectorAll('[data-fandu-message]'))
+    if (!sections.length) return
+    let seen = new Set()
+    try {
+      seen = new Set(JSON.parse(sessionStorage.getItem('fandu-sections') || '[]'))
+    } catch {}
+    const observer = new IntersectionObserver(
+      (entries) => {
+        for (const entry of entries) {
+          if (!entry.isIntersecting) continue
+          const text = entry.target.dataset.fanduMessage
+          if (!text || seen.has(text)) continue
+          seen.add(text)
+          try {
+            sessionStorage.setItem('fandu-sections', JSON.stringify([...seen]))
+          } catch {}
+          setQueue((q) => [...q, { id: nextId(), text }])
+        }
+      },
+      { threshold: 0.35, rootMargin: '0px 0px -12% 0px' },
+    )
+    sections.forEach((section) => observer.observe(section))
+    return () => observer.disconnect()
+  }, [pathname, ready])
+
   // Finishing a blog post: near the bottom, and on the page long enough to have read something.
   useEffect(() => {
     if (!ready || !/^\/blog\/./.test(pathname) || saveRef.current.read.includes(pathname)) return
@@ -330,11 +359,14 @@ export default function Buddy() {
   // Eyes follow the pointer; the body leans with the scroll direction.
   useEffect(() => {
     if (!ready) return
+    const reducedQuery = window.matchMedia('(prefers-reduced-motion: reduce)')
+    const coarseQuery = window.matchMedia('(pointer: coarse)')
     let raf = 0
     let mx = 0
     let my = 0
     let lastY = window.scrollY
     let st
+    let listening = false
     const follow = () => {
       raf = 0
       const el = bot.current
@@ -360,13 +392,34 @@ export default function Buddy() {
       clearTimeout(st)
       st = setTimeout(() => el && delete el.dataset.scroll, 220)
     }
-    window.addEventListener('mousemove', onMove, { passive: true })
-    window.addEventListener('scroll', onScroll, { passive: true })
-    return () => {
+    const stop = () => {
       cancelAnimationFrame(raf)
+      raf = 0
       clearTimeout(st)
+      if (!listening) return
+      listening = false
       window.removeEventListener('mousemove', onMove)
       window.removeEventListener('scroll', onScroll)
+      if (look.current) look.current.removeAttribute('transform')
+      if (bot.current) delete bot.current.dataset.scroll
+    }
+    const syncMotion = () => {
+      if (reducedQuery.matches || coarseQuery.matches) {
+        stop()
+        return
+      }
+      if (listening) return
+      listening = true
+      window.addEventListener('mousemove', onMove, { passive: true })
+      window.addEventListener('scroll', onScroll, { passive: true })
+    }
+    reducedQuery.addEventListener('change', syncMotion)
+    coarseQuery.addEventListener('change', syncMotion)
+    syncMotion()
+    return () => {
+      stop()
+      reducedQuery.removeEventListener('change', syncMotion)
+      coarseQuery.removeEventListener('change', syncMotion)
     }
   }, [ready])
 
@@ -523,6 +576,23 @@ export default function Buddy() {
               New page +10 · finished post +30 · daily visit +15 · pets +2
             </p>
 
+            <div className="mt-4 grid gap-2">
+              <Link href="/services" onClick={() => setOpen(false)} className="btn-ghost justify-between">
+                Explore services <span aria-hidden>→</span>
+              </Link>
+              <Link href="/products#ai-projects" onClick={() => setOpen(false)} className="btn-ghost justify-between">
+                View AI projects <span aria-hidden>→</span>
+              </Link>
+              <a
+                href="https://wa.me/923177416164?text=Assalam-o-Alaikum%2C%20I%20would%20like%20to%20discuss%20an%20AI%20project%20with%20AI%20ka%20Fanda."
+                target="_blank"
+                rel="noreferrer"
+                className="btn-signal justify-between"
+              >
+                Start a WhatsApp chat <span aria-hidden>↗</span>
+              </a>
+            </div>
+
             <div className="mt-4 flex gap-2">
               <button type="button" onClick={pet} className="btn-signal flex-1 justify-center">
                 Pet Fandu 💜
@@ -584,7 +654,7 @@ export default function Buddy() {
             <Bot mood={mood} lookRef={look} />
           </span>
           <span className="absolute -left-1 top-1 rounded-full border border-indigo/60 bg-void px-1.5 py-px font-mono text-[10px] font-semibold text-indigo-soft shadow">
-            {lvl.n}
+            01 · {lvl.n}
           </span>
         </button>
       </div>

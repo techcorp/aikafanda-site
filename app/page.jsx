@@ -44,7 +44,10 @@ export default async function HomePage() {
       </section>
 
       {/* services */}
-      <section className="section !pb-0 !pt-12 md:!pt-16">
+      <section
+        className="section !pb-0 !pt-12 md:!pt-16"
+        data-fandu-message="Need something similar? I can take you straight to our services."
+      >
         <div className="shell">
           <SectionHead
             kicker="Services"
@@ -58,7 +61,10 @@ export default async function HomePage() {
       <ScrollShowcase items={services} variant="services" />
 
       {/* products */}
-      <section className="section">
+      <section
+        className="section"
+        data-fandu-message="Every product here was built with AI. Pick a card to explore it."
+      >
         <div className="shell">
           <SectionHead
             kicker="Portfolio"
@@ -78,7 +84,10 @@ export default async function HomePage() {
 
 
       {/* AI projects */}
-      <section className="section !pt-6 md:!pt-10">
+      <section
+        className="section !pt-6 md:!pt-10"
+        data-fandu-message="AI can automate real business workflows too — not just build apps."
+      >
         <div className="shell">
           <SectionHead
             kicker="AI Projects"
@@ -96,7 +105,10 @@ export default async function HomePage() {
         </div>
       </section>
       {/* process */}
-      <section className="section">
+      <section
+        className="section"
+        data-fandu-message="This is how an idea moves from prompt to production."
+      >
         <div className="shell">
           <SectionHead
             kicker="Methodology"
